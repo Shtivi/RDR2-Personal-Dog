@@ -254,3 +254,16 @@ AsyncCompanionTask* DogCompanionInterface::track(Ped ped)
 
 	return new TrackEntityAsyncTask(getPed(), ped, 50);
 }
+
+void DogCompanionInterface::hunt(Ped target, float timeout)
+{
+	Object seq;
+	AI::OPEN_SEQUENCE_TASK(&seq);
+	if (distance(getPed(), target) > 25)
+	{
+		AI::TASK_FOLLOW_TO_OFFSET_OF_ENTITY(0, target, 0, 0, 0, 1, timeout, 25, 0, 0, 0, 0, 0);
+	}
+	AI::TASK_COMBAT_PED(0, target, 0, 16);
+	AI::CLOSE_SEQUENCE_TASK(seq);
+	AI::TASK_PERFORM_SEQUENCE(getPed(), seq);
+}

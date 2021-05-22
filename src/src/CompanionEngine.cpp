@@ -37,6 +37,13 @@ Prompt* createRenamePrompt()
 	return new Prompt(DataFiles::Lang->get("interaction.rename.promptLabel"), GAMEPLAY::GET_HASH_KEY("INPUT_LOOK_BEHIND"), PromptMode::SemiHold);
 }
 
+Prompt* createAttackPreyPrompt(const char* dogName)
+{
+	return new Prompt(
+		string(DataFiles::Lang->get("interaction.attack_prey.promptLabel")).append(" ").append(dogName).c_str(), 
+		GAMEPLAY::GET_HASH_KEY("INPUT_INTERACT_OPTION1"), 
+		PromptMode::SemiHold);
+}
 
 CompanionEngine::CompanionEngine()
 {
@@ -230,7 +237,7 @@ void CompanionEngine::updatePrompts()
 		{
 			if (!state->companionApi->isBegging())
 			{
-				state->companionApi->beg(6000, findCarriedPedBy(player));
+				state->companionApi->beg(12000, findCarriedPedBy(player));
 			}
 			state->feedPrompt->show();
 			state->praisePrompt->hide();
@@ -277,6 +284,32 @@ void CompanionEngine::updatePrompts()
 		state->stayPrompt->show();
 	}
 
+	Entity targetEntity;
+	if (ScriptSettings::getBool("AllowHuntingPrompt") &&
+		PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &targetEntity) && 
+		targetEntity != state->companionDog &&
+		!PED::_0x772A1969F649E902(ENTITY::GET_ENTITY_MODEL(targetEntity)) && // _IS_THIS_MODEL_A_HORSE
+		ENTITY::_0x9A100F1CF4546629(targetEntity) && // GET_IS_ANIMAL
+		!ENTITY::IS_ENTITY_DEAD(targetEntity) &&
+		distanceBetweenEntities(player, targetEntity) < DataFiles::Dog->getInt("whistling_range") * DataFiles::DogMeta->getFloat("attack_prey_threshold")) 
+	{
+		if (!state->attackPreyPrompt || state->attackPreyPrompt->getTargetEntity() != targetEntity)
+		{
+			state->attackPreyPrompt = createAttackPreyPrompt(DataFiles::Dog->get("name"));	
+		}
+		state->attackPreyPrompt->setTargetEntity(targetEntity);
+		state->attackPreyPrompt->show();
+		if (state->attackPreyPrompt->isActivatedByPlayer())
+		{
+			state->companionApi->hunt(targetEntity, 12000);
+		}
+	}
+	else if (state->attackPreyPrompt)
+	{
+		state->attackPreyPrompt->hide();
+	}
+
+
 	if (AUDIO::IS_ANY_SPEECH_PLAYING(player))
 	{
 		state->praisePrompt->setIsEnabled(false);
@@ -312,7 +345,7 @@ void CompanionEngine::updateGUI()
 	}
 
 
-	if (getPlayerTargetEntity() == state->companionDog)
+	if (getPlayerTargetEntity() == state->companionDog || state->companionApi->isAgitated())
 	{	
 		state->coresUI->show();
 		UI::_0xD4EE21B7CC7FD350(true); // _SHOW_HORSE_CORES
@@ -358,7 +391,7 @@ void CompanionEngine::onAnimalInteraction(int eventIndex)
 
 void CompanionEngine::onPromptTriggered(int eventIndex)
 {
-	if (!state->companionDog)
+	if (!state->companionDog && !state->companionApi->isSittingDown())
 	{
 		return;
 	}
@@ -376,7 +409,6 @@ void CompanionEngine::onPromptTriggered(int eventIndex)
 
 	Ped trackedEntity = eventData[4];
 	Vector3 pos = entityPos(trackedEntity);
-	//AI::TASK_FOLLOW_NAV_MESH_TO_COORD(state->companionDog, pos.x, pos.y, pos.z, 2, 10000, 4, false, 0);
 	state->currentTask = state->companionApi->track(trackedEntity);
 }
 
@@ -498,8 +530,11 @@ void CompanionEngine::onBulletImpact(int eventIndex)
 			return;
 		}
 
-		state->companionApi->fetch(entityId);
-		tutorial("fetch");
+		if (ScriptSettings::getBool("MarkHuntedAnimals"))
+		{
+			state->companionApi->fetch(entityId);
+			tutorial("fetch");
+		}
 	}
 }
 
@@ -597,6 +632,7 @@ void CompanionEngine::clearCompanion()
 	state->stayPrompt->hide();
 	state->renamePrompt->hide();
 	state->followPrompt->hide();
+	state->attackPreyPrompt->hide();
 
 	log("companion has been cleared");
 }

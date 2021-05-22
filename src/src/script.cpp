@@ -14,7 +14,6 @@ using namespace std;
 Ped player;
 
 bool debugOn = false;
-bool invincible = false;
 
 CompanionEngine* engine = NULL;
 
@@ -27,7 +26,9 @@ bool Initialize()
 	DECORATOR::DECOR_REGISTER("SH_CMP_companion", 3);
 
 	ScriptSettings::load(DataFiles::getDataFilePath("DogCompanion.ini"), new SettingsMap {
-		{"ShowCores", "1"}
+		{"ShowCores", "1"},
+		{"MarkHuntedAnimals", "1"},
+		{"AllowHuntingPrompt", "0"},
 	});
 
 	if (!DataFiles::load())
@@ -95,10 +96,10 @@ void main()
 			//debug(DECISIONEVENT::IS_SHOCKING_EVENT_IN_SPHERE(GAMEPLAY::GET_HASH_KEY("EVENT_SHOCKING_DANGEROUS_ANIMAL"), pos.x, pos.y, pos.z, 40));
 			//debug((int)PED::_0xCD66FEA29400A0B5(player));
 
-			if (PURSUIT::_0xAD401C63158ACBAA(PLAYER::PLAYER_ID()))
-			{
-				debug("INCIDENT");
-			}
+			//if (PURSUIT::_0xAD401C63158ACBAA(PLAYER::PLAYER_ID()))
+			//{
+			//	debug("INCIDENT");
+			//}
 
 			Hash weaponHash;
 			WEAPON::GET_CURRENT_PED_WEAPON(player, &weaponHash, 0, 0, 0);
@@ -109,7 +110,6 @@ void main()
 					{
 
 					}
-					getPedSize(e);
 				}
 				else
 				{
@@ -147,15 +147,6 @@ void main()
 
 			if (IsKeyJustUp(VK_F1))
 			{
-				invincible = !invincible;
-				if (invincible) {
-					showSubtitle("invincible ON");
-				}
-				else
-				{
-					showSubtitle("invincible OFF");
-
-				}
 			}
 
 
@@ -180,7 +171,7 @@ void main()
 
 			if (IsKeyJustUp(VK_KEY_K))
 			{
-				Ped ped = createPed("a_c_snakeredboa_01", playerPos() + getForwardVector(player) * 12);
+				Ped ped = createPed("a_c_rabbit_01", playerPos() + getForwardVector(player) * 12);
 				//Ped ped = createPed("a_c_wolf_small", playerPos() + getForwardVector(player) * 25);
 				//Ped ped = createPed("a_m_m_bivroughtravellers_01", playerPos() + getForwardVector(player) * 12);
 				PED::SET_PED_CONFIG_FLAG(ped, 6, 1);

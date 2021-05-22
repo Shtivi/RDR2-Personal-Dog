@@ -35,4 +35,5 @@ public:
 	bool isInCombat();
 	float getHealthRate();
 	bool isBegging();
+	void hunt(Ped target, float timeout);
 };
