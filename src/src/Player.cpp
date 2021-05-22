@@ -51,3 +51,8 @@ void addToPlayerCore(AttributeCores core, int amount)
 {
 	setPlayerCoreValue(core, getPlayerCoreValue(core) + amount);
 }
+
+Ped getPlayerSaddleHorse()
+{
+	return PLAYER::_0xB48050D326E9A2F3(PLAYER::PLAYER_ID()); // _GET_SADDLE_HORSE_FOR_PLAYER
+}

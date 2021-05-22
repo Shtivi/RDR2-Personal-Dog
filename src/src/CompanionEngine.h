@@ -15,6 +15,7 @@ public:
 	RootState* getState();
 
 private:
+	Ped spawnDog();
 	void updatePrompts();
 	void scanCompanionSurrounding();
 	void updateGUI();
@@ -31,4 +32,9 @@ private:
 	void clearCompanion();
 	void renameCompanion(const char* name);
 	void tutorial(const char* tutorialName);
+	void commandStay();
+	void commandFollow();
+	void commandPraise();
+	void commandRetrieveDog();
+
 };

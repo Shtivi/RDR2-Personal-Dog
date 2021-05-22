@@ -45,6 +45,14 @@ Prompt* createAttackPreyPrompt(const char* dogName)
 		PromptMode::SemiHold);
 }
 
+Prompt* createRetrieveDogPrompt(const char* dogName)
+{
+	return new Prompt(
+		string(DataFiles::Lang->get("interaction.retrieve_dog.promptLabel")).append(" ").append(dogName).c_str(),
+		GAMEPLAY::GET_HASH_KEY("INPUT_LOOK_BEHIND"),
+		PromptMode::SemiHold);
+}
+
 CompanionEngine::CompanionEngine()
 {
 	this->state = new RootState();
@@ -75,8 +83,7 @@ void CompanionEngine::start()
 	}
 	if (!dog)
 	{
-		dog = createPed(DataFiles::Dog->getInt("model"), *getSafeCoordForPed(playerPos() + getForwardVector(player)));
-		PED::_0x77FF8D35EEC6BBC4(dog, DataFiles::Dog->getInt("preset_index"), 0); // _SET_PED_OUTFIT_PRESET
+		dog = spawnDog();
 	}
 
 	accompanyDog(dog);
@@ -85,6 +92,13 @@ void CompanionEngine::start()
 	{
 		state->companionApi->setName(name);
 	}
+}
+
+Ped CompanionEngine::spawnDog()
+{
+	Ped dog = createPed(DataFiles::Dog->getInt("model"), *getSafeCoordForPed(playerPos() + getForwardVector(player)));
+	PED::_0x77FF8D35EEC6BBC4(dog, DataFiles::Dog->getInt("preset_index"), 0); // _SET_PED_OUTFIT_PRESET
+	return dog;
 }
 
 void CompanionEngine::update()
@@ -114,6 +128,13 @@ void CompanionEngine::update()
 
 	if (!state->companionDog || !state->companionApi)
 	{
+		return;
+	}
+
+	if (!ENTITY::DOES_ENTITY_EXIST(state->companionDog))
+	{
+		deleteBlipSafe(&state->companionBlip);
+		accompanyDog(spawnDog());
 		return;
 	}
 
@@ -201,32 +222,21 @@ void CompanionEngine::scanCompanionSurrounding()
 
 void CompanionEngine::updatePrompts()
 {
+	bool isWithingWhistlingRange = distance(player, state->companionDog) < DataFiles::Dog->getInt("whistling_range");
+
 	if (state->stayPrompt->isActivatedByPlayer())
 	{
-		state->companionApi->stay();
-		const char* speech = "HORSE_STAY_HERE_MALE";
-		if (!PED::IS_PED_MALE(state->companionDog))
-		{
-			speech = "HORSE_STAY_HERE_FEMALE";
-		}
-		playAmbientSpeech(player, (char*)speech);
+		commandStay();
 	}
 
 	if (state->followPrompt->isActivatedByPlayer())
 	{
-		triggerFollow();
-		const char* speech = "HORSE_FOLLOW_ME_MALE";
-		if (!PED::IS_PED_MALE(state->companionDog))
-		{
-			speech = "HORSE_FOLLOW_ME_FEMALE";
-		}
-		playAmbientSpeech(player, (char*)speech);
+		commandFollow();
 	}
 
 	if (state->praisePrompt->isActivatedByPlayer())
 	{
-		state->calmTimer.start();
-		state->companionApi->getPraised(player);
+		commandPraise();
 	}
 
 	if (distance(player, state->companionDog) < 2)
@@ -308,6 +318,19 @@ void CompanionEngine::updatePrompts()
 		state->attackPreyPrompt->hide();
 	}
 
+	if (!isWithingWhistlingRange)
+	{
+		state->retrieveDogPrompt->setTargetEntity(getPlayerSaddleHorse());
+		state->retrieveDogPrompt->show();
+		if (state->retrieveDogPrompt->isActivatedByPlayer())
+		{
+			commandRetrieveDog();
+		}
+	}
+	else
+	{
+		state->retrieveDogPrompt->hide();
+	}
 
 	if (AUDIO::IS_ANY_SPEECH_PLAYING(player))
 	{
@@ -494,8 +517,11 @@ void CompanionEngine::accompanyDog(Ped dog)
 	state->renamePrompt = createRenamePrompt();
 	state->renamePrompt->setTargetEntity(state->companionDog);
 	state->renamePrompt->hide();
-	state->previousCompanionHealth = (float)ENTITY::GET_ENTITY_HEALTH(state->companionDog);
+	
+	state->retrieveDogPrompt = createRetrieveDogPrompt(DataFiles::Dog->get("name"));
+	state->retrieveDogPrompt->hide();
 
+	state->previousCompanionHealth = (float)ENTITY::GET_ENTITY_HEALTH(state->companionDog);
 	this->state->coresUI->setPed(dog);
 }
 
@@ -667,4 +693,45 @@ void CompanionEngine::triggerFollow()
 {
 	this->state->currentTask = NULL;
 	this->state->companionApi->follow();
+}
+
+void CompanionEngine::commandFollow()
+{
+	triggerFollow();
+	const char* speech = "HORSE_FOLLOW_ME_MALE";
+	if (!PED::IS_PED_MALE(state->companionDog))
+	{
+		speech = "HORSE_FOLLOW_ME_FEMALE";
+	}
+	playAmbientSpeech(player, (char*)speech);
+}
+
+void CompanionEngine::commandPraise()
+{
+	state->calmTimer.start();
+	state->companionApi->getPraised(player);
+}
+
+void CompanionEngine::commandStay()
+{
+	state->companionApi->stay();
+	const char* speech = "HORSE_STAY_HERE_MALE";
+	if (!PED::IS_PED_MALE(state->companionDog))
+	{
+		speech = "HORSE_STAY_HERE_FEMALE";
+	}
+	playAmbientSpeech(player, (char*)speech);
+}
+
+void CompanionEngine::commandRetrieveDog()
+{
+	log("retrieving lost dog");
+	Vector3 spawnCoords = *getSafeCoordForPed(playerPos() + getForwardVector(player) * -10);
+	if (!spawnCoords)
+	{
+		log("could not find proper spawn coords");
+		return;
+	}
+
+	ENTITY::SET_ENTITY_COORDS(state->companionDog, spawnCoords.x, spawnCoords.y, spawnCoords.z, 0, 0, 0, 1);
 }

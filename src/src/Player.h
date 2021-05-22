@@ -14,3 +14,4 @@ bool isPlayerResting();
 void setPlayerCoreValue(AttributeCores core, int value);
 int getPlayerCoreValue(AttributeCores core);
 void addToPlayerCore(AttributeCores core, int amount);
+Ped getPlayerSaddleHorse();
