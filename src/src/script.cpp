@@ -52,8 +52,6 @@ void main()
 		return;
 	}
 
-	showSubtitle("DogCompaion BETA by Shtivi");
-
 	while (true)
 	{
 		player = PLAYER::PLAYER_PED_ID();

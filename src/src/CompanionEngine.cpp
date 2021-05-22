@@ -117,8 +117,6 @@ void CompanionEngine::update()
 		return;
 	}
 
-	distance(player, state->companionDog);
-
 	if (ENTITY::IS_ENTITY_DEAD(state->companionDog))
 	{
 		onCompnaionDied();
@@ -175,7 +173,8 @@ void CompanionEngine::update()
 
 void CompanionEngine::scanCompanionSurrounding()
 {
-	if (SYSTEM::TIMERA() <= DataFiles::DogMeta->getInt("scan_surrounding_interval"))
+	if (SYSTEM::TIMERA() <= DataFiles::DogMeta->getInt("scan_surrounding_interval") ||
+		distance(player, state->companionDog) < DataFiles::Dog->getInt("whistling_range"))
 	{
 		return;
 	}
@@ -385,6 +384,7 @@ void CompanionEngine::onAnimalInteraction(int eventIndex)
 		state->accompanyPrompt->setTargetEntity(state->candidateDog);
 		state->accompanyPrompt->show();
 		state->accompanyPrompt->setIsEnabled(true);
+		tutorial("bond_2");
 	}
 
 }
@@ -506,7 +506,9 @@ void CompanionEngine::onBulletImpact(int eventIndex)
 		return;
 	}
 
-	if (state->companionApi && state->companionApi->isPerformingScenario())
+	if (state->companionApi && 
+		state->companionApi->isPerformingScenario() && 
+		distance(player, state->companionDog) > DataFiles::Dog->getInt("whistling_range"))
 	{
 		return;
 	}
