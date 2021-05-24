@@ -151,6 +151,9 @@
     <ClCompile Include="TrackEntityAsyncTask.cpp">
       <Filter>Src\Logic\CompanionAI</Filter>
     </ClCompile>
+    <ClCompile Include="CompanionCommands.cpp">
+      <Filter>Src\Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">
@@ -305,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="TrackEntityAsyncTask.h">
       <Filter>Src\Logic\CompanionAI</Filter>
+    </ClInclude>
+    <ClInclude Include="CompanionCommands.h">
+      <Filter>Src\Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

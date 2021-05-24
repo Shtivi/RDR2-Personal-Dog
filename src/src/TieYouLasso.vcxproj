@@ -13,6 +13,7 @@
     <ClCompile Include="BaseDataFile.cpp" />
     <ClCompile Include="Blips.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CompanionCommands.cpp" />
     <ClCompile Include="CompanionCoresUI.cpp" />
     <ClCompile Include="CompanionEngine.cpp" />
     <ClCompile Include="Conversation.cpp" />
@@ -71,6 +72,7 @@
     <ClInclude Include="Blips.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CarriableTypes.h" />
+    <ClInclude Include="CompanionCommands.h" />
     <ClInclude Include="CompanionCoresUI.h" />
     <ClInclude Include="CompanionEngine.h" />
     <ClInclude Include="CompanionState.h" />

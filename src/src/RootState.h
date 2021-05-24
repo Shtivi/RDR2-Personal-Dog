@@ -23,4 +23,5 @@ public:
 	float previousCompanionHealth;
 	Stopwatch calmTimer;
 	bool wasInsideInterior;
+	bool isWithinWhistlingRange;
 };

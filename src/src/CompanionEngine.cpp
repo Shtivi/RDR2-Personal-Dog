@@ -144,6 +144,8 @@ void CompanionEngine::update()
 		return;
 	}
 
+	state->isWithinWhistlingRange = distance(player, state->companionDog) < DataFiles::Dog->getInt("whistling_range");
+
 	if (!PED::IS_PED_GROUP_MEMBER(state->companionDog, PED::GET_PED_GROUP_INDEX(player), 0))
 	{
 		PED::SET_PED_AS_GROUP_MEMBER(state->companionDog, PED::GET_PED_GROUP_INDEX(player));
@@ -195,7 +197,7 @@ void CompanionEngine::update()
 void CompanionEngine::scanCompanionSurrounding()
 {
 	if (SYSTEM::TIMERA() <= DataFiles::DogMeta->getInt("scan_surrounding_interval") ||
-		distance(player, state->companionDog) < DataFiles::Dog->getInt("whistling_range"))
+		!state->isWithinWhistlingRange)
 	{
 		return;
 	}
@@ -222,21 +224,19 @@ void CompanionEngine::scanCompanionSurrounding()
 
 void CompanionEngine::updatePrompts()
 {
-	bool isWithingWhistlingRange = distance(player, state->companionDog) < DataFiles::Dog->getInt("whistling_range");
-
 	if (state->stayPrompt->isActivatedByPlayer())
 	{
-		commandStay();
+		CompanionCommands::commandStay(state);
 	}
 
 	if (state->followPrompt->isActivatedByPlayer())
 	{
-		commandFollow();
+		CompanionCommands::commandFollow(state);
 	}
 
 	if (state->praisePrompt->isActivatedByPlayer())
 	{
-		commandPraise();
+		CompanionCommands::commandPraise(state);
 	}
 
 	if (distance(player, state->companionDog) < 2)
@@ -318,13 +318,13 @@ void CompanionEngine::updatePrompts()
 		state->attackPrompt->hide();
 	}
 
-	if (!isWithingWhistlingRange)
+	if (!state->isWithinWhistlingRange)
 	{
 		state->retrieveDogPrompt->setTargetEntity(getPlayerSaddleHorse());
 		state->retrieveDogPrompt->show();
 		if (state->retrieveDogPrompt->isActivatedByPlayer())
 		{
-			commandRetrieveDog();
+			CompanionCommands::commandRetrieve(state);
 		}
 	}
 	else
@@ -534,7 +534,7 @@ void CompanionEngine::onBulletImpact(int eventIndex)
 
 	if (state->companionApi && 
 		state->companionApi->isPerformingScenario() && 
-		distance(player, state->companionDog) > DataFiles::Dog->getInt("whistling_range"))
+		state->isWithinWhistlingRange
 	{
 		return;
 	}
@@ -575,7 +575,7 @@ void CompanionEngine::onWhistle(int eventIndex)
 			return;
 		}
 
-		triggerFollow();
+		CompanionCommands::triggerFollow(this->state);
 	}
 	else
 	{
@@ -691,51 +691,4 @@ void CompanionEngine::tutorial(const char* tutorialKey)
 		DataFiles::TutorialFlags->set(tutorialKey, 1);
 		DataFiles::TutorialFlags->save();
 	}
-}
-
-void CompanionEngine::triggerFollow() 
-{
-	this->state->currentTask = NULL;
-	this->state->companionApi->follow();
-}
-
-void CompanionEngine::commandFollow()
-{
-	triggerFollow();
-	const char* speech = "HORSE_FOLLOW_ME_MALE";
-	if (!PED::IS_PED_MALE(state->companionDog))
-	{
-		speech = "HORSE_FOLLOW_ME_FEMALE";
-	}
-	playAmbientSpeech(player, (char*)speech);
-}
-
-void CompanionEngine::commandPraise()
-{
-	state->calmTimer.start();
-	state->companionApi->getPraised(player);
-}
-
-void CompanionEngine::commandStay()
-{
-	state->companionApi->stay();
-	const char* speech = "HORSE_STAY_HERE_MALE";
-	if (!PED::IS_PED_MALE(state->companionDog))
-	{
-		speech = "HORSE_STAY_HERE_FEMALE";
-	}
-	playAmbientSpeech(player, (char*)speech);
-}
-
-void CompanionEngine::commandRetrieveDog()
-{
-	log("retrieving lost dog");
-	Vector3 spawnCoords = *getSafeCoordForPed(playerPos() + getForwardVector(player) * -10);
-	if (!spawnCoords)
-	{
-		log("could not find proper spawn coords");
-		return;
-	}
-
-	ENTITY::SET_ENTITY_COORDS(state->companionDog, spawnCoords.x, spawnCoords.y, spawnCoords.z, 0, 0, 0, 1);
 }
