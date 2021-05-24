@@ -40,7 +40,7 @@ Prompt* createRenamePrompt()
 Prompt* createAttackPreyPrompt(const char* dogName)
 {
 	return new Prompt(
-		string(DataFiles::Lang->get("interaction.attack_prey.promptLabel")).append(" ").append(dogName).c_str(), 
+		string(DataFiles::Lang->get("interaction.attack.promptLabel")).append(" ").append(dogName).c_str(), 
 		GAMEPLAY::GET_HASH_KEY("INPUT_INTERACT_OPTION1"), 
 		PromptMode::SemiHold);
 }
@@ -302,20 +302,20 @@ void CompanionEngine::updatePrompts()
 		!ENTITY::IS_ENTITY_DEAD(targetEntity) &&
 		distanceBetweenEntities(player, targetEntity) < DataFiles::Dog->getInt("whistling_range") * DataFiles::DogMeta->getFloat("attack_prey_threshold")) 
 	{
-		if (!state->attackPreyPrompt || state->attackPreyPrompt->getTargetEntity() != targetEntity)
+		if (!state->attackPrompt || state->attackPrompt->getTargetEntity() != targetEntity)
 		{
-			state->attackPreyPrompt = createAttackPreyPrompt(DataFiles::Dog->get("name"));	
+			state->attackPrompt = createAttackPreyPrompt(DataFiles::Dog->get("name"));	
 		}
-		state->attackPreyPrompt->setTargetEntity(targetEntity);
-		state->attackPreyPrompt->show();
-		if (state->attackPreyPrompt->isActivatedByPlayer())
+		state->attackPrompt->setTargetEntity(targetEntity);
+		state->attackPrompt->show();
+		if (state->attackPrompt->isActivatedByPlayer())
 		{
 			state->companionApi->hunt(targetEntity, 12000);
 		}
 	}
-	else if (state->attackPreyPrompt)
+	else if (state->attackPrompt)
 	{
-		state->attackPreyPrompt->hide();
+		state->attackPrompt->hide();
 	}
 
 	if (!isWithingWhistlingRange)
@@ -650,8 +650,8 @@ void CompanionEngine::clearCompanion()
 	deleteBlipSafe(&state->companionBlip);
 	DataFiles::Dog->set("model", "");
 	DataFiles::Dog->set("name", "");
-	DataFiles::Dog->set("bonding_level", 1);
-	DataFiles::Dog->set("max_health", 1);
+	DataFiles::Dog->set("bonding_level", "");
+	DataFiles::Dog->set("max_health", "");
 	DataFiles::Dog->save();
 
 	state->dismissPrompt->hide();
@@ -660,7 +660,11 @@ void CompanionEngine::clearCompanion()
 	state->stayPrompt->hide();
 	state->renamePrompt->hide();
 	state->followPrompt->hide();
-	state->attackPreyPrompt->hide();
+
+	if (state->attackPrompt)
+	{
+		state->attackPrompt->hide();
+	}
 
 	log("companion has been cleared");
 }

@@ -19,7 +19,7 @@ A cowboy without a horse is not a cowboy. But if you ever wondered how it'd be t
 - In order to recover your dog's health, it needs to be fed with hunted prey.
 - The mod provides full ingame tutorials and hints.
 - You may give your dog a name and change it anytime ingame.
-- You may dismiss your dog anytime.
+- You may dismiss your dog at anytime.
 
 ### Known issues:
 - Dogs original color is not saved, and a default color is used.  This is because there is no way (that I know about) to retrieve a peds outfit index. If you know anything about it, let me know.
