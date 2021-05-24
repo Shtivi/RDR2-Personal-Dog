@@ -2,6 +2,7 @@
 
 #include "DogCompanionInterface.h"
 #include "RootState.h"
+#include "CompanionCommands.h"
 
 class CompanionEngine
 {
@@ -27,14 +28,9 @@ private:
 	void onPredatorDetected(Ped predator);
 	void bondWithDog();
 	void accompanyDog(Ped dog);
-	void triggerFollow();
 	void dismissCompanion();
 	void clearCompanion();
 	void renameCompanion(const char* name);
 	void tutorial(const char* tutorialName);
-	void commandStay();
-	void commandFollow();
-	void commandPraise();
-	void commandRetrieveDog();
 
 };
