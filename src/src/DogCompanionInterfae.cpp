@@ -173,6 +173,8 @@ void DogCompanionInterface::getPreyMeal(Ped from)
 	{
 		return;
 	}
+	AI::CLEAR_PED_TASKS(companion, 1, 1);
+
 	playAmbientSpeech(from, PED::IS_PED_MALE(companion) ? "HORSE_BIG_COMPLIMENT_HIGH_MALE" : "HORSE_BIG_COMPLIMENT_HIGH_FEMALE");
 	playVocalization("BARK_HAPPY");
 	Vector3 mealCoords = entityPos(meal);
@@ -267,4 +269,10 @@ void DogCompanionInterface::hunt(Ped target, float timeout)
 	AI::TASK_COMBAT_PED(0, target, 0, 16);
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(getPed(), seq);
+}
+
+void DogCompanionInterface::flee(Ped threat, int duration, float distance)
+{
+	AI::_0xFD45175A6DFD7CE9(getPed(), threat, 3, 0, distance, duration, 0);
+
 }

@@ -24,6 +24,7 @@ bool Initialize()
 	log("Dog Companion by Shtivi - 1.0.0");
 
 	DECORATOR::DECOR_REGISTER("SH_CMP_companion", 3);
+	DECORATOR::DECOR_REGISTER("SH_CMP_health_core", 3);
 
 	ScriptSettings::load(DataFiles::getDataFilePath("DogCompanion.ini"), new SettingsMap {
 		{"ShowCores", "1"},
@@ -121,8 +122,12 @@ void main()
 				{
 					if (IsKeyJustUp(VK_KEY_Z)) 
 					{
+						DECORATOR::DECOR_SET_INT(engine->getState()->companionDog, "SH_CMP_health_core", 25);
+						ENTITY::SET_ENTITY_HEALTH(targetEntity, 100, 0);
+						PED::_0xCB9401F918CB0F75(targetEntity, (Any*)"isLowHealthCoreActive", true, 100);
+
 					}
-					debug(ENTITY::_0x75DF9E73F2F005FD(targetEntity));
+					//debug(DECORATOR::DECOR_GET_INT(engine->getState()->companionDog, "SH_CMP_health_core"));
 					//debug(PED::GET_RELATIONSHIP_BETWEEN_PEDS(player, targetEntity));
 					//debug(PED::IS_PED_IN_COMBAT(player, targetEntity));
 				}

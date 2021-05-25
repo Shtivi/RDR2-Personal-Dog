@@ -25,5 +25,5 @@ public:
 
 private:
 	void draw();
-	void drawCore(float meterFill, const char* coreTypeTextureDict = NULL, float coreFill = 1, const char* modifier = NULL, RGB* modifierColor = NULL);
+	void drawCore(float meterFill, const char* coreTypeTextureDict = NULL, float coreFill = 1, RGB* fillColor = NULL, const char* modifier = NULL, RGB* modifierColor = NULL);
 };

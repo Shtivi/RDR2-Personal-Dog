@@ -31,6 +31,10 @@ float CoreIconX = CoreX + (CoreOutlineWidth - CoreIconWidth) / 2;
 float CoreIconY = CoreMeterY + CoreMeterHeight - CoreIconHeight * 3 / 4;
 
 RGB AgitationModifierColor = { 255, 0, 0 };
+RGB LowHealthFillColor = { 255, 0, 0 };
+RGB Black = { 0,0,0};
+RGB DefaultBrightColor = { 229, 229, 229 };
+
 const char* HealthCoreTextureDict = "rpg_core_health";
 
 ComapnionCoresUI::ComapnionCoresUI(Ped ped, int bondingLevel)
@@ -77,17 +81,19 @@ void ComapnionCoresUI::hide()
 void ComapnionCoresUI::draw()
 {
 	float healthRate = (float)ENTITY::GET_ENTITY_HEALTH(companion) / ENTITY::GET_ENTITY_MAX_HEALTH(companion, 1);
+	float healthCoreValue = (float)DECORATOR::DECOR_GET_INT(companion, "SH_CMP_health_core") / 100;
+	RGB* fillColor = healthCoreValue < 0.3 ? &LowHealthFillColor : &DefaultBrightColor;
 	switch (modifier)
 	{
 	case CompanionCoreModifiers::Agitated:
-		drawCore(healthRate, HealthCoreTextureDict, 1, "rpg_agitation", &AgitationModifierColor);
+		drawCore(healthRate, HealthCoreTextureDict, healthCoreValue, fillColor, "rpg_agitation", &AgitationModifierColor);
 		break;
 	default:
-		drawCore(healthRate, HealthCoreTextureDict, 1);
+		drawCore(healthRate, HealthCoreTextureDict, healthCoreValue, fillColor);
 	}
 }
 
-void ComapnionCoresUI::drawCore(float meterFill, const char* coreTypeTextureDict, float coreFill, const char* modifier, RGB* modifierColor)
+void ComapnionCoresUI::drawCore(float meterFill, const char* coreTypeTextureDict, float coreFill, RGB* fillColor, const char* modifier, RGB* modifierColor)
 {
 	int meterIndex = (int)(meterFill * 100 - 1);
 	if (meterIndex < 0 || meterIndex > 99)
@@ -105,11 +111,11 @@ void ComapnionCoresUI::drawCore(float meterFill, const char* coreTypeTextureDict
 		{
 			if (coreTypeTextureDict)
 			{
-				modifierColor = new RGB{ 0, 0, 0 };
+				modifierColor = &Black;
 			}
 			else
 			{
-				modifierColor = new RGB{ 229, 229, 299 };
+				modifierColor = &DefaultBrightColor;
 			}
 		}
 
@@ -117,8 +123,12 @@ void ComapnionCoresUI::drawCore(float meterFill, const char* coreTypeTextureDict
 	}
 	else if (coreTypeTextureDict)
 	{
-		int coreStateIndex = (int)(coreFill * 16 - 1);
-		drawSprite((char*)coreTypeTextureDict, (char*)string("core_state_").append(to_string(coreStateIndex)).c_str(), CoreStateX, CoreStateY, CoreStateWidth, CoreStateHeight, 0, 229, 229, 229, 255);
+		int coreStateIndex = max(0, (int)(coreFill * 16 - 1));
+		if (!fillColor)
+		{
+			fillColor = &DefaultBrightColor;
+		}
+		drawSprite((char*)coreTypeTextureDict, (char*)string("core_state_").append(to_string(coreStateIndex)).c_str(), CoreStateX, CoreStateY, CoreStateWidth, CoreStateHeight, 0, fillColor->r, fillColor->g, fillColor->b, 255);
 	}
 
 	drawSprite("blips", "blip_animal", CoreIconX, CoreIconY, CoreIconWidth, CoreIconHeight, 0, 229, 229, 229, 255);

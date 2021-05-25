@@ -22,6 +22,7 @@ public:
 	Blip companionBlip;
 	float previousCompanionHealth;
 	Stopwatch calmTimer;
+	Stopwatch statsTimer;
 	bool wasInsideInterior;
 	bool isWithinWhistlingRange;
 };

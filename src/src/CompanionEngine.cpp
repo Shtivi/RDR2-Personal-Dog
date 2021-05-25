@@ -197,8 +197,7 @@ void CompanionEngine::update()
 		state->companionApi->combat(playerTarget);
 	}
 
-	state->previousCompanionHealth = (float)ENTITY::GET_ENTITY_HEALTH(state->companionDog);
-
+	updateCompanionStats();
 	scanCompanionSurrounding();
 	updatePrompts();
 	updateGUI();
@@ -232,6 +231,43 @@ void CompanionEngine::scanCompanionSurrounding()
 	}
 }
 
+void CompanionEngine::updateCompanionStats()
+{
+	if (!state->isWithinWhistlingRange)
+	{
+		return;
+	}
+
+	if (!state->statsTimer.isStarted())
+	{
+		state->statsTimer.start();
+	}
+
+	state->previousCompanionHealth = (float)ENTITY::GET_ENTITY_HEALTH(state->companionDog);
+
+	int currentHealthCoreValue = DataFiles::Dog->getInt("health_core");
+	if (!state->companionApi->isAgitated() && state->statsTimer.getElapsedSeconds() >= 1)
+	{
+		int currentHealth = ENTITY::GET_ENTITY_HEALTH(state->companionDog);
+		int nextHealth = min(
+			ENTITY::GET_ENTITY_MAX_HEALTH(state->companionDog, 1), 
+			(int)(currentHealth + ((float)currentHealthCoreValue / 100) * DataFiles::DogMeta->getInt("health_regen_rate")));
+		ENTITY::SET_ENTITY_HEALTH(state->companionDog, nextHealth, 0);
+		state->statsTimer.start();
+	}
+
+	if (SYSTEM::TIMERB() > DataFiles::DogMeta->getInt("core_drain_rate") * 1000)
+	{
+		int nextHealthCoreValue = max(0, currentHealthCoreValue - DataFiles::DogMeta->getFloat("core_drain_impact") * 100);
+		SYSTEM::SETTIMERB(0);
+		DataFiles::Dog->set("health_core", nextHealthCoreValue);
+		DataFiles::Dog->save();
+	}
+
+	DECORATOR::DECOR_SET_INT(state->companionDog, "SH_CMP_health_core", DataFiles::Dog->getInt("health_core"));
+
+}
+
 void CompanionEngine::updatePrompts()
 {
 	if (state->stayPrompt->isActivatedByPlayer())
@@ -263,6 +299,8 @@ void CompanionEngine::updatePrompts()
 			if (state->feedPrompt->isActivatedByPlayer())
 			{
 				state->companionApi->getPreyMeal(player);
+				DataFiles::Dog->set("health_core", 100);
+				DataFiles::Dog->save();
 			}
 
 			tutorial("companion_meal");
@@ -455,6 +493,7 @@ void CompanionEngine::bondWithDog()
 	DataFiles::Dog->set("whistling_range", DataFiles::DogMeta->getInt("bonding.1.whistling_range"));
 	DataFiles::Dog->set("fetch_range_min", 20);
 	DataFiles::Dog->set("fetch_range_max", 70);
+	DataFiles::Dog->set("health_core", 100);
 	accompanyDog(state->candidateDog);
 	state->candidateDog = NULL;
 	DataFiles::Dog->set("model", (int )ENTITY::GET_ENTITY_MODEL(state->companionDog));
@@ -493,6 +532,7 @@ void CompanionEngine::accompanyDog(Ped dog)
 	ANIMALTUNING::_0xCBDA22C87977244F(dog, 165, 5);
 	ENTITY::SET_ENTITY_MAX_HEALTH(dog, DataFiles::Dog->getInt("max_health"));
 	ENTITY::SET_ENTITY_HEALTH(dog, ENTITY::GET_ENTITY_MAX_HEALTH(dog, 0), 0);
+	DECORATOR::DECOR_SET_INT(state->companionDog, "SH_CMP_health_core", DataFiles::Dog->getInt("health_core"));
 
 	Blip dogBlip = createBlip(dog, 0x19365607);
 	state->companionBlip = dogBlip;
