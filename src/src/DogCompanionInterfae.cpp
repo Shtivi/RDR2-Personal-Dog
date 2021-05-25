@@ -35,16 +35,17 @@ void DogCompanionInterface::follow()
 	AI::TASK_CLEAR_LOOK_AT(getPed());
 	if (!PED::IS_PED_GROUP_MEMBER(companion, PED::GET_PED_GROUP_INDEX(player), 0))
 	{
-		PED::SET_PED_AS_GROUP_MEMBER(companion, PED::GET_PED_GROUP_INDEX(player));
+		//PED::SET_PED_AS_GROUP_MEMBER(companion, PED::GET_PED_GROUP_INDEX(player));
 		Vector3 coords = entityPos(player);
 		AI::CLEAR_PED_TASKS_IMMEDIATELY(companion, 1, 1);
-		AI::TASK_FOLLOW_NAV_MESH_TO_COORD(companion, coords.x, coords.y, coords.z, 3, -1, 5, false, 0);
+		//AI::TASK_FOLLOW_NAV_MESH_TO_COORD(companion, coords.x, coords.y, coords.z, 3, -1, 2, false, 0);
+		AI::TASK_FOLLOW_TO_OFFSET_OF_ENTITY(companion, player, 0, 0, 0, 3, 100000, 5, false, 0, 0, 0, 0);
 	}
 	else
 	{
-		AI::CLEAR_PED_TASKS_IMMEDIATELY(companion, 1, 1);
-
-		AI::TASK_FOLLOW_TO_OFFSET_OF_ENTITY(companion, player, 0, 0, 0, 3, 100000, 5, false, 0, 0, 0, 0);
+		AI::CLEAR_PED_TASKS(companion, 1, 1);
+		//AI::CLEAR_PED_TASKS_IMMEDIATELY(companion, 1, 1);
+		//AI::TASK_FOLLOW_TO_OFFSET_OF_ENTITY(companion, player, 0, 0, 0, 3, 100000, 5, false, 0, 0, 0, 0);
 	}
 }
 

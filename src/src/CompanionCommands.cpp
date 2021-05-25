@@ -46,11 +46,17 @@ void CompanionCommands::commandRetrieve(RootState* state)
 	}
 
 	ENTITY::SET_ENTITY_COORDS(state->companionDog, spawnCoords.x, spawnCoords.y, spawnCoords.z, 0, 0, 0, 1);
-	triggerFollow();
+	triggerFollow(state);
 }
 
 void CompanionCommands::commandAttack(RootState* state, Ped target)
 {
 	state->currentTask = NULL;
 	state->companionApi->combat(target);
+	const char* speech = "HORSE_RUN_AWAY_MALE";
+	if (!PED::IS_PED_MALE(state->companionDog))
+	{
+		speech = "HORSE_RUN_AWAY_FEMALE";
+	}
+	playAmbientSpeech(player, (char*)speech);
 }

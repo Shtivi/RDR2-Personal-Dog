@@ -6,7 +6,7 @@ TrackEntityAsyncTask::TrackEntityAsyncTask(Ped ped, Entity hunted, float maxDist
 	this->huntedEntity = hunted;
 	this->maxDistanceFromPlayer = maxDistanceFromPlayer;
 
-	play();
+	play(playerPos());
 }
 
 bool TrackEntityAsyncTask::isDone()
@@ -33,7 +33,7 @@ void TrackEntityAsyncTask::update()
 	}
 }
 
-void TrackEntityAsyncTask::play()
+void TrackEntityAsyncTask::play(Vector3 startFrom)
 {
 	Vector3 entityCoords = entityPos(huntedEntity);
 	Vector3 trackerCoords = entityPos(getPed());
@@ -42,18 +42,16 @@ void TrackEntityAsyncTask::play()
 	Object seq;
 	AI::OPEN_SEQUENCE_TASK(&seq);
 
-
 	float targetDistance = distance(entityCoords, trackerCoords);
 	if (targetDistance <= optimalStoppingDistance * 1.2)
 	{
 		AI::TASK_TURN_PED_TO_FACE_ENTITY(0, huntedEntity, 2000, 0, 0, 0);
 		AI::TASK_LOOK_AT_ENTITY(0, huntedEntity, -1, 0, 0, 0);
-		//AI::TASK_COMBAT_PED(0, huntedEntity, 0, 16);
 	}
 	else
 	{
 		Vector3 direction = normalOf(entityCoords - trackerCoords);
-		Vector3 destination = trackerCoords + direction * min(25, targetDistance - optimalStoppingDistance);
+		Vector3 destination = trackerCoords + direction * min(32, targetDistance - optimalStoppingDistance);
 		AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY("WORLD_ANIMAL_DOG_SNIFFING_GROUND"), 2000, 1, 1, 0, 1);
 		AI::TASK_TURN_PED_TO_FACE_COORD(0, destination.x, destination.y, destination.z, 1500);
 		AI::TASK_FOLLOW_NAV_MESH_TO_COORD(0, destination.x, destination.y, destination.z, 1.5, 12000, 1, false, 0);

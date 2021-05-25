@@ -28,7 +28,8 @@ bool Initialize()
 	ScriptSettings::load(DataFiles::getDataFilePath("DogCompanion.ini"), new SettingsMap {
 		{"ShowCores", "1"},
 		{"MarkHuntedAnimals", "1"},
-		{"AllowHuntingPrompt", "0"},
+		{"AllowAttackPrompt", "1"},
+		{"AttackPromptAnimalsOnly", "0"}
 	});
 
 	if (!DataFiles::load())
@@ -121,7 +122,9 @@ void main()
 					if (IsKeyJustUp(VK_KEY_Z)) 
 					{
 					}
-					debug(targetEntity);
+					debug(ENTITY::_0x75DF9E73F2F005FD(targetEntity));
+					//debug(PED::GET_RELATIONSHIP_BETWEEN_PEDS(player, targetEntity));
+					//debug(PED::IS_PED_IN_COMBAT(player, targetEntity));
 				}
 				else
 				{
@@ -141,17 +144,19 @@ void main()
 
 			if (IsKeyJustUp(VK_KEY_X))
 			{
+				playAmbientSpeech(player, "ROB_INTERACTION_ESCALATED");
 			}
 
 			if (IsKeyJustUp(VK_F1))
 			{
+				showSubtitle(ENTITY::GET_ENTITY_MAX_HEALTH(player, 1));
 			}
 
 
 			if (IsKeyJustUp(VK_KEY_Z))
 			{
-				AI::_0x524B54361229154F(engine->getState()->companionDog, GAMEPLAY::GET_HASH_KEY("WORLD_ANIMAL_DOG_GUARD_GROWL"), 10000, 1, 1, 0, 1);
-				//engine->getState()->companionApi->playVocalization("GROWL");
+				Ped ped = createPed("a_c_deer_01", playerPos() + getForwardVector(player) * 5);
+				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&ped);
 			}
 
 
@@ -169,20 +174,14 @@ void main()
 
 			if (IsKeyJustUp(VK_KEY_K))
 			{
-				Ped ped = createPed("a_c_rabbit_01", playerPos() + getForwardVector(player) * 12);
+				Ped ped = createPed("a_m_m_bivroughtravellers_01", playerPos() + getForwardVector(player) * 12);
 				//Ped ped = createPed("a_c_wolf_small", playerPos() + getForwardVector(player) * 25);
 				//Ped ped = createPed("a_m_m_bivroughtravellers_01", playerPos() + getForwardVector(player) * 12);
 				PED::SET_PED_CONFIG_FLAG(ped, 6, 1);
-				DECORATOR::DECOR_SET_INT(ped, "honor_override", 0);
+				//DECORATOR::DECOR_SET_INT(ped, "honor_override", 0);
 				
-				PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
-				//ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&ped);
-
-				//WAIT(500);
-				//AI::_0x779A2FFACEFAEA7B(dog, ped, 0, 1, 3, 1, 0); // TASK_GRAPPLE
-				//AI::TASK_COMBAT_PED(ped, player, 0, 16);
-				//WAIT(200);
-				//showSubtitle(to_string(PED::IS_PED_IN_COMBAT(ped, player)).c_str());
+				//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
+				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&ped);
 			}
 		}
 

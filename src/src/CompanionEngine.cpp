@@ -37,11 +37,11 @@ Prompt* createRenamePrompt()
 	return new Prompt(DataFiles::Lang->get("interaction.rename.promptLabel"), GAMEPLAY::GET_HASH_KEY("INPUT_LOOK_BEHIND"), PromptMode::SemiHold);
 }
 
-Prompt* createAttackPreyPrompt(const char* dogName)
+Prompt* createAttackPrompt(const char* dogName)
 {
 	return new Prompt(
 		string(DataFiles::Lang->get("interaction.attack.promptLabel")).append(" ").append(dogName).c_str(), 
-		GAMEPLAY::GET_HASH_KEY("INPUT_INTERACT_OPTION1"), 
+		GAMEPLAY::GET_HASH_KEY((char*)ScriptSettings::get("AttackPromptControlName").c_str()), 
 		PromptMode::SemiHold);
 }
 
@@ -119,6 +119,10 @@ void CompanionEngine::update()
 		{
 			onPromptTriggered(i);
 		}
+		else if (eventType == GAMEPLAY::GET_HASH_KEY("EVENT_PED_WHISTLE"))
+		{
+			onWhistle(i);
+		}
 	}
 
 	if (state->candidateDog && state->accompanyPrompt && state->accompanyPrompt->isActivatedByPlayer())
@@ -128,6 +132,11 @@ void CompanionEngine::update()
 
 	if (!state->companionDog || !state->companionApi)
 	{
+		if (!DataFiles::TutorialFlags->getBool("bond_1") && isPedADog(getPlayerTargetEntity()))
+		{
+			tutorial("bond_1");
+		}
+
 		return;
 	}
 
@@ -144,9 +153,10 @@ void CompanionEngine::update()
 		return;
 	}
 
-	state->isWithinWhistlingRange = distance(player, state->companionDog) < DataFiles::Dog->getInt("whistling_range");
+	float compaionDistanceToPlayer = distance(player, state->companionDog);
+	state->isWithinWhistlingRange = compaionDistanceToPlayer < DataFiles::Dog->getInt("whistling_range");
 
-	if (!PED::IS_PED_GROUP_MEMBER(state->companionDog, PED::GET_PED_GROUP_INDEX(player), 0))
+	if (!PED::IS_PED_GROUP_MEMBER(state->companionDog, PED::GET_PED_GROUP_INDEX(player), 0) && compaionDistanceToPlayer < 30)
 	{
 		PED::SET_PED_AS_GROUP_MEMBER(state->companionDog, PED::GET_PED_GROUP_INDEX(player));
 	}
@@ -293,29 +303,33 @@ void CompanionEngine::updatePrompts()
 		state->stayPrompt->show();
 	}
 
-	Entity targetEntity;
-	if (ScriptSettings::getBool("AllowHuntingPrompt") &&
-		PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &targetEntity) && 
-		targetEntity != state->companionDog &&
-		!PED::_0x772A1969F649E902(ENTITY::GET_ENTITY_MODEL(targetEntity)) && // _IS_THIS_MODEL_A_HORSE
-		ENTITY::_0x9A100F1CF4546629(targetEntity) && // GET_IS_ANIMAL
-		!ENTITY::IS_ENTITY_DEAD(targetEntity) &&
-		distanceBetweenEntities(player, targetEntity) < DataFiles::Dog->getInt("whistling_range") * DataFiles::DogMeta->getFloat("attack_prey_threshold")) 
+	if (ScriptSettings::getBool("AllowAttackPrompt") && state->isWithinWhistlingRange)
 	{
-		if (!state->attackPrompt || state->attackPrompt->getTargetEntity() != targetEntity)
+		Entity targetEntity = getPlayerTargetEntity();
+		if (targetEntity &&
+			targetEntity != state->companionDog &&
+			!PED::_0x772A1969F649E902(ENTITY::GET_ENTITY_MODEL(targetEntity)) && // _IS_THIS_MODEL_A_HORSE
+			PED::IS_PED_ON_FOOT(targetEntity) &&
+			!isPedADog(targetEntity) &&
+			ENTITY::_0x75DF9E73F2F005FD(targetEntity) && // _GET_ENTITY_CAN_BE_DAMAGED
+			!ENTITY::IS_ENTITY_DEAD(targetEntity) &&
+			(ENTITY::_0x9A100F1CF4546629(targetEntity) || !ScriptSettings::getBool("AttackPromptAnimalsOnly")))
 		{
-			state->attackPrompt = createAttackPreyPrompt(DataFiles::Dog->get("name"));	
+			if (!state->attackPrompt || state->attackPrompt->getTargetEntity() != targetEntity)
+			{
+				state->attackPrompt = createAttackPrompt(DataFiles::Dog->get("name"));
+			}
+			state->attackPrompt->setTargetEntity(targetEntity);
+			state->attackPrompt->show();
+			if (state->attackPrompt->isActivatedByPlayer())
+			{
+				CompanionCommands::commandAttack(state, targetEntity);
+			}
 		}
-		state->attackPrompt->setTargetEntity(targetEntity);
-		state->attackPrompt->show();
-		if (state->attackPrompt->isActivatedByPlayer())
+		else if (state->attackPrompt)
 		{
-			state->companionApi->hunt(targetEntity, 12000);
+			state->attackPrompt->hide();
 		}
-	}
-	else if (state->attackPrompt)
-	{
-		state->attackPrompt->hide();
 	}
 
 	if (!state->isWithinWhistlingRange)
@@ -332,22 +346,16 @@ void CompanionEngine::updatePrompts()
 		state->retrieveDogPrompt->hide();
 	}
 
-	if (AUDIO::IS_ANY_SPEECH_PLAYING(player))
+	bool isPlayerSpeaking = AUDIO::IS_ANY_SPEECH_PLAYING(player);
+	state->praisePrompt->setIsEnabled(!isPlayerSpeaking);
+	state->stayPrompt->setIsEnabled(!isPlayerSpeaking && !state->companionApi->isAgitated());
+	state->dismissPrompt->setIsEnabled(!isPlayerSpeaking);
+	state->followPrompt->setIsEnabled(!isPlayerSpeaking);
+	if (state->attackPrompt)
 	{
-		state->praisePrompt->setIsEnabled(false);
-		state->stayPrompt->setIsEnabled(false);
-		state->dismissPrompt->setIsEnabled(false);
-		state->followPrompt->setIsEnabled(false);
-	}
-	else
-	{
-		state->praisePrompt->setIsEnabled(true);
-		state->stayPrompt->setIsEnabled(true);
-		state->dismissPrompt->setIsEnabled(true);
-		state->followPrompt->setIsEnabled(true);
+		state->attackPrompt->setIsEnabled(!isPlayerSpeaking && !state->companionApi->isInCombat());
 	}
 
-	state->stayPrompt->setIsEnabled(!state->companionApi->isAgitated());
 }
 
 void CompanionEngine::updateGUI()
@@ -414,7 +422,7 @@ void CompanionEngine::onAnimalInteraction(int eventIndex)
 
 void CompanionEngine::onPromptTriggered(int eventIndex)
 {
-	if (!state->companionDog && !state->companionApi->isSittingDown())
+	if (!state->companionDog || !state->companionApi || state->companionApi->isSittingDown())
 	{
 		return;
 	}
@@ -451,6 +459,7 @@ void CompanionEngine::bondWithDog()
 	state->candidateDog = NULL;
 	DataFiles::Dog->set("model", (int )ENTITY::GET_ENTITY_MODEL(state->companionDog));
 	DataFiles::Dog->save();
+	tutorial("bond_3");
 }
 
 void CompanionEngine::accompanyDog(Ped dog)
@@ -534,7 +543,7 @@ void CompanionEngine::onBulletImpact(int eventIndex)
 
 	if (state->companionApi && 
 		state->companionApi->isPerformingScenario() && 
-		state->isWithinWhistlingRange
+		state->isWithinWhistlingRange)
 	{
 		return;
 	}
@@ -568,7 +577,23 @@ void CompanionEngine::onBulletImpact(int eventIndex)
 
 void CompanionEngine::onWhistle(int eventIndex)
 {
-	if (distance(player, state->companionDog) < DataFiles::Dog->getInt("whistling_range"))
+	if (!state->companionDog)
+	{
+		return;
+	}
+
+	int arr[10];
+	if (!SCRIPT::GET_EVENT_DATA(0, eventIndex, arr, 2))
+	{
+		return;
+	}
+
+	if (arr[0] != player)
+	{
+		return;
+	}
+
+	if (state->isWithinWhistlingRange)
 	{
 		if (INTERIOR::GET_INTERIOR_FROM_ENTITY(player))
 		{

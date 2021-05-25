@@ -14,5 +14,5 @@ public:
 
 private:
 	float calculateStoppingDistance();
-	void play();
+	void play(Vector3 startFrom = Vector3{ 0,0,0 });
 };
