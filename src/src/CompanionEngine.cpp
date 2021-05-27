@@ -153,6 +153,12 @@ void CompanionEngine::update()
 		return;
 	}
 
+	if (!state->didPlayerHadControlLastFrame && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()))
+	{
+		log("automatically retrieving dog");
+		CompanionCommands::commandRetrieve(state);
+	}
+
 	float compaionDistanceToPlayer = distance(player, state->companionDog);
 	state->isWithinWhistlingRange = compaionDistanceToPlayer < DataFiles::Dog->getInt("whistling_range");
 
@@ -191,22 +197,32 @@ void CompanionEngine::update()
 		}
 	}
 
+	updateCompanionStats();
+	scanCompanionSurrounding();
+	updatePrompts();
+	updateGUI();
+
+	state->didPlayerHadControlLastFrame = PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID());
+}
+
+void CompanionEngine::scanCompanionSurrounding()
+{
+
 	Ped playerTarget = PED::_0xCD66FEA29400A0B5(player); // GET_CURRENT_TARGET_FOR_PED
 	if (playerTarget)
 	{
 		state->companionApi->combat(playerTarget);
 	}
 
-	updateCompanionStats();
-	scanCompanionSurrounding();
-	updatePrompts();
-	updateGUI();
-}
+	if (INTERIOR::GET_INTERIOR_FROM_ENTITY(player) && !state->companionApi->isSittingDown())
+	{
+		state->currentTask = state->companionApi->waitOutsideInterior();
+		tutorial("companion_wait_outside");
+	}
 
-void CompanionEngine::scanCompanionSurrounding()
-{
 	if (SYSTEM::TIMERA() <= DataFiles::DogMeta->getInt("scan_surrounding_interval") ||
-		!state->isWithinWhistlingRange)
+		!state->isWithinWhistlingRange ||
+		state->companionApi->isInCombat())
 	{
 		return;
 	}
@@ -222,12 +238,6 @@ void CompanionEngine::scanCompanionSurrounding()
 		{
 			onPredatorDetected(predator);
 		}
-	}
-
-	if (INTERIOR::GET_INTERIOR_FROM_ENTITY(player) && !state->companionApi->isSittingDown())
-	{
-		state->currentTask = state->companionApi->waitOutsideInterior();
-		tutorial("companion_wait_outside");
 	}
 }
 
@@ -437,12 +447,14 @@ void CompanionEngine::onAnimalInteraction(int eventIndex)
 	int arr[10];
 	if (!SCRIPT::GET_EVENT_DATA(0, eventIndex, arr, 3))
 	{
+		log("WARN: animalInteraction event has no data");
 		return;
 	}
 
-	int interactionType = arr[1];
+	int interactionType = arr[4];
 	int animalPedId = arr[2];
-	if (arr[0] == player && interactionType == 32759 && isPedADog(animalPedId))
+
+	if (arr[0] == player && interactionType == GAMEPLAY::GET_HASH_KEY("Interaction_Dog_Patting") && isPedADog(animalPedId))
 	{
 		state->candidateDog = animalPedId;
 		if (state->accompanyPrompt)
@@ -454,6 +466,7 @@ void CompanionEngine::onAnimalInteraction(int eventIndex)
 		state->accompanyPrompt->show();
 		state->accompanyPrompt->setIsEnabled(true);
 		tutorial("bond_2");
+		log("bonding prompt available");
 	}
 
 }
@@ -471,7 +484,7 @@ void CompanionEngine::onPromptTriggered(int eventIndex)
 		return;
 	}
 
-	if (!eventData[0] == 34) // PP_TRACK_ANIMAL
+	if (eventData[0] != 34) // PP_TRACK_ANIMAL
 	{
 		return;
 	}
@@ -479,6 +492,8 @@ void CompanionEngine::onPromptTriggered(int eventIndex)
 	Ped trackedEntity = eventData[4];
 	Vector3 pos = entityPos(trackedEntity);
 	state->currentTask = state->companionApi->track(trackedEntity);
+	log("tracking task triggered");
+	tutorial("tracking");
 }
 
 void CompanionEngine::bondWithDog()
@@ -751,7 +766,7 @@ void CompanionEngine::tutorial(const char* tutorialKey)
 {
 	if (!DataFiles::TutorialFlags->getBool(tutorialKey))
 	{
-		showHelpText(DataFiles::Lang->get(string("tutorial.").append(tutorialKey).c_str()));
+		showHelpText(DataFiles::Lang->get(string("tutorial.").append(tutorialKey).c_str()), 8000);
 		log(string("tutorial seen: ").append(tutorialKey));
 		DataFiles::TutorialFlags->set(tutorialKey, 1);
 		DataFiles::TutorialFlags->save();

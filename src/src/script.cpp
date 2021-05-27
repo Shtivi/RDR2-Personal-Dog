@@ -21,7 +21,7 @@ bool Initialize()
 {
 	player = PLAYER::PLAYER_PED_ID();
 	initializeLogger();
-	log("Dog Companion by Shtivi - 1.0.0");
+	log("Dog Companion by Shtivi - BETA 1.0.0");
 
 	DECORATOR::DECOR_REGISTER("SH_CMP_companion", 3);
 	DECORATOR::DECOR_REGISTER("SH_CMP_health_core", 3);
@@ -92,6 +92,7 @@ void main()
 
 		if (debugOn)
 		{
+			debug(PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()));
 			Vector3 pos = playerPos();
 			//debug(DECISIONEVENT::IS_SHOCKING_EVENT_IN_SPHERE(GAMEPLAY::GET_HASH_KEY("EVENT_SHOCKING_DANGEROUS_ANIMAL"), pos.x, pos.y, pos.z, 40));
 			//debug((int)PED::_0xCD66FEA29400A0B5(player));

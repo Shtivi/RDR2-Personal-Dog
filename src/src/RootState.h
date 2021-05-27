@@ -25,4 +25,5 @@ public:
 	Stopwatch statsTimer;
 	bool wasInsideInterior;
 	bool isWithinWhistlingRange;
+	bool didPlayerHadControlLastFrame;
 };

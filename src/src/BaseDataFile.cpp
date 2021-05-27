@@ -59,7 +59,7 @@ bool BaseDataFile::save(bool force)
 	}
 
 	hasChanges = false;
-	log("done");
+	log("file saved.");
 	return true;
 }
 
