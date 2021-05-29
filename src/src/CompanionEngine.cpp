@@ -153,7 +153,10 @@ void CompanionEngine::update()
 		return;
 	}
 
-	if (!state->didPlayerHadControlLastFrame && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()))
+	if (!state->didPlayerHadControlLastFrame && 
+		PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && 
+		!GAMEPLAY::GET_MISSION_FLAG() &&
+		state->isWithinWhistlingRange)
 	{
 		log("automatically retrieving dog");
 		CompanionCommands::commandRetrieve(state);
@@ -356,8 +359,9 @@ void CompanionEngine::updatePrompts()
 		Entity targetEntity = getPlayerTargetEntity();
 		if (targetEntity &&
 			targetEntity != state->companionDog &&
-			!INTERIOR::GET_INTERIOR_FROM_ENTITY(player) &&
 			!ENTITY::IS_ENTITY_DEAD(targetEntity) &&
+			!INTERIOR::GET_INTERIOR_FROM_ENTITY(player) &&
+			PED::GET_PED_RELATIONSHIP_GROUP_HASH(targetEntity) != GAMEPLAY::GET_HASH_KEY("REL_GANG_DUTCHS") &&
 			ENTITY::_0x75DF9E73F2F005FD(targetEntity) && // _GET_ENTITY_CAN_BE_DAMAGED
 			PED::IS_PED_ON_FOOT(targetEntity) &&
 			!isPedADog(targetEntity) &&
@@ -381,7 +385,7 @@ void CompanionEngine::updatePrompts()
 		}
 	}
 
-	if (!state->isWithinWhistlingRange)
+	if (!state->isWithinWhistlingRange && getPlayerSaddleHorse())
 	{
 		state->retrieveDogPrompt->setTargetEntity(getPlayerSaddleHorse());
 		state->retrieveDogPrompt->show();
