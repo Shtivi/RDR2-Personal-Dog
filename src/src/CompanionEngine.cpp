@@ -356,11 +356,12 @@ void CompanionEngine::updatePrompts()
 		Entity targetEntity = getPlayerTargetEntity();
 		if (targetEntity &&
 			targetEntity != state->companionDog &&
-			!PED::_0x772A1969F649E902(ENTITY::GET_ENTITY_MODEL(targetEntity)) && // _IS_THIS_MODEL_A_HORSE
+			!INTERIOR::GET_INTERIOR_FROM_ENTITY(player) &&
+			!ENTITY::IS_ENTITY_DEAD(targetEntity) &&
+			ENTITY::_0x75DF9E73F2F005FD(targetEntity) && // _GET_ENTITY_CAN_BE_DAMAGED
 			PED::IS_PED_ON_FOOT(targetEntity) &&
 			!isPedADog(targetEntity) &&
-			ENTITY::_0x75DF9E73F2F005FD(targetEntity) && // _GET_ENTITY_CAN_BE_DAMAGED
-			!ENTITY::IS_ENTITY_DEAD(targetEntity) &&
+			!PED::_0x772A1969F649E902(ENTITY::GET_ENTITY_MODEL(targetEntity)) && // _IS_THIS_MODEL_A_HORSE
 			(ENTITY::_0x9A100F1CF4546629(targetEntity) || !ScriptSettings::getBool("AttackPromptAnimalsOnly")))
 		{
 			if (!state->attackPrompt || state->attackPrompt->getTargetEntity() != targetEntity)
