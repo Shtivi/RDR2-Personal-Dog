@@ -155,8 +155,8 @@ void CompanionEngine::update()
 
 	if (!state->didPlayerHadControlLastFrame && 
 		PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && 
-		!GAMEPLAY::GET_MISSION_FLAG() &&
-		state->isWithinWhistlingRange)
+		distance(player, state->companionDog) >= DataFiles::DogMeta->getInt("auto_retrieve.min_distance") &&
+		!GAMEPLAY::GET_MISSION_FLAG())
 	{
 		log("automatically retrieving dog");
 		CompanionCommands::commandRetrieve(state);
@@ -272,9 +272,17 @@ void CompanionEngine::updateCompanionStats()
 	if (SYSTEM::TIMERB() > DataFiles::DogMeta->getInt("core_drain_rate") * 1000)
 	{
 		int nextHealthCoreValue = max(0, currentHealthCoreValue - DataFiles::DogMeta->getFloat("core_drain_impact") * 100);
+		
 		SYSTEM::SETTIMERB(0);
 		DataFiles::Dog->set("health_core", nextHealthCoreValue);
 		DataFiles::Dog->save();
+
+		if (nextHealthCoreValue < DataFiles::DogMeta->getFloat("low_health_threshold") * 100 && 
+			currentHealthCoreValue >= DataFiles::DogMeta->getFloat("low_health_threshold") * 100)
+		{
+			debug("low!!!!!!!!");
+			showHelpText(DataFiles::Lang->get("tutorial.companion_low_health_core"), 10000);
+		}
 	}
 
 	DECORATOR::DECOR_SET_INT(state->companionDog, "SH_CMP_health_core", DataFiles::Dog->getInt("health_core"));
@@ -428,7 +436,10 @@ void CompanionEngine::updateGUI()
 	}
 
 
-	if (getPlayerTargetEntity() == state->companionDog || state->companionApi->isAgitated())
+	if (getPlayerTargetEntity() == state->companionDog || 
+		state->companionApi->isAgitated() || 
+		//DECORATOR::DECOR_GET_INT(state->companionDog, "SH_CMP_health_core") < DataFiles::DogMeta->getFloat("low_health_threshold") ||
+		state->companionApi->getHealthRate() < DataFiles::DogMeta->getFloat("low_health_threshold"))
 	{	
 		state->coresUI->show();
 		UI::_0xD4EE21B7CC7FD350(true); // _SHOW_HORSE_CORES
@@ -514,6 +525,7 @@ void CompanionEngine::bondWithDog()
 	DataFiles::Dog->set("fetch_range_min", 20);
 	DataFiles::Dog->set("fetch_range_max", 70);
 	DataFiles::Dog->set("health_core", 100);
+
 	accompanyDog(state->candidateDog);
 	state->candidateDog = NULL;
 	DataFiles::Dog->set("model", (int )ENTITY::GET_ENTITY_MODEL(state->companionDog));

@@ -114,6 +114,10 @@ void main()
 				{
 					if (IsKeyJustUp(VK_KEY_Z)) 
 					{
+						//PED::_0x437C08DB4FEBE2BD(targetEntity, (Any*)"sick", 1.0, -1);
+						PED::_0xA762C9D6CF165E0D(targetEntity, (Any*)"MoodName", (Any*)"MoodLowHealth", 5000);
+						//PED::_0xCB9401F918CB0F75(targetEntity, (Any*)"Cold_Low_Stamina", 1, 5000);
+
 					}
 				}
 				else
@@ -142,6 +146,7 @@ void main()
 
 			if (IsKeyJustUp(VK_KEY_Z))
 			{
+				PED::_0xA5BAE410B03E7371(player, 0x39AB3C5C, 0, 0);
 			}
 
 
@@ -169,7 +174,7 @@ void main()
 			}
 		}
 
-		if (true && IsKeyJustUp(VK_F2))
+		if (false && IsKeyJustUp(VK_F2))
 		{
 			setDebugMode(!isDebugMode());
 		}
