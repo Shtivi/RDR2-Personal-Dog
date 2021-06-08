@@ -30,7 +30,9 @@ bool Initialize()
 		{"ShowCores", "1"},
 		{"MarkHuntedAnimals", "1"},
 		{"AllowAttackPrompt", "1"},
-		{"AttackPromptAnimalsOnly", "0"}
+		{"AttackPromptAnimalsOnly", "0"},
+		{"IgnorePlayerCombatWhenSittingDown", "1"},
+		{"AllowEnteringInteriors", "0"}
 	});
 
 	if (!DataFiles::load())
@@ -91,6 +93,8 @@ void main()
 
 		if (debugOn)
 		{
+			debug(ITEMS::_0x13D234A2A3F66E63(player));
+
 			Vector3 pos = playerPos();
 
 			Hash weaponHash;
@@ -100,8 +104,9 @@ void main()
 				if (PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &e) /*&& distanceBetweenEntities(player, e) < 20*/) {
 					if (IsKeyJustUp(VK_KEY_Z)) 
 					{
+						PED::_0x77FF8D35EEC6BBC4(e, 2, 0); // _SET_PED_OUTFIT_PRESET
 					}
-
+					debug(PED::_0x30569F348D126A5A(e)); // _GET_PED_META_OUTFIT_HASH 
 				}
 				else
 				{
@@ -112,12 +117,10 @@ void main()
 				Entity targetEntity;
 				if (PLAYER::GET_PLAYER_TARGET_ENTITY(PLAYER::PLAYER_ID(), &targetEntity))
 				{
+					debug(PED::_0x30569F348D126A5A(targetEntity)); // _GET_PED_META_OUTFIT_HASH 
 					if (IsKeyJustUp(VK_KEY_Z)) 
 					{
-						//PED::_0x437C08DB4FEBE2BD(targetEntity, (Any*)"sick", 1.0, -1);
-						PED::_0xA762C9D6CF165E0D(targetEntity, (Any*)"MoodName", (Any*)"MoodLowHealth", 5000);
-						//PED::_0xCB9401F918CB0F75(targetEntity, (Any*)"Cold_Low_Stamina", 1, 5000);
-
+						showSubtitle(to_string(DECORATOR::DECOR_GET_INT(targetEntity, "metaped_outfit_request_name")));
 					}
 				}
 				else
@@ -146,7 +149,14 @@ void main()
 
 			if (IsKeyJustUp(VK_KEY_Z))
 			{
-				PED::_0xA5BAE410B03E7371(player, 0x39AB3C5C, 0, 0);
+				Ped ped = createPed("a_c_doghusky_01", playerPos() + getForwardVector(player) * 5);
+				Ped prey = createPed("a_c_rabbit_01", playerPos() + getForwardVector(player) * 12);
+				WAIT(1000);
+				ENTITY::SET_ENTITY_HEALTH(prey, 0, 0);
+				AI::_0xF0B4F759F35CC7F5(prey, -132773589, ped, 6, 512);
+				WAIT(1000);
+				showSubtitle(AI::_0x0CCFE72B43C9CF96(prey));
+				AI::_0x502EC17B1BED4BFA(ped, prey);
 			}
 
 
@@ -154,6 +164,7 @@ void main()
 			{
 
 				Ped ped = createPed("a_c_doghusky_01", playerPos() + getForwardVector(player) * 5);
+				//PED::_0x77FF8D35EEC6BBC4(ped, 1, 0);
 				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&ped);
 				//Ped ped = createPed("a_c_rabbit_01", playerPos() + getForwardVector(player) * 22);
 				//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
@@ -174,7 +185,7 @@ void main()
 			}
 		}
 
-		if (false && IsKeyJustUp(VK_F2))
+		if (true && IsKeyJustUp(VK_F2))
 		{
 			setDebugMode(!isDebugMode());
 		}

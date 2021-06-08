@@ -210,14 +210,18 @@ void CompanionEngine::update()
 
 void CompanionEngine::scanCompanionSurrounding()
 {
-
-	Ped playerTarget = PED::_0xCD66FEA29400A0B5(player); // GET_CURRENT_TARGET_FOR_PED
-	if (playerTarget)
+	if (PED::IS_PED_IN_MELEE_COMBAT(player) && (!state->companionApi->isSittingDown() || !ScriptSettings::getBool("IgnorePlayerCombatWhenSittingDown")))
 	{
-		state->companionApi->combat(playerTarget);
+		Ped playerTarget = PED::_0xCD66FEA29400A0B5(player); // GET_CURRENT_TARGET_FOR_PED
+		if (playerTarget && 
+			!PED::_0x3AA24CCC0D451379(playerTarget) && // IS_PED_HOGTIED 
+			!PED::_0xD453BB601D4A606E(playerTarget)) // _IS_PED_BEING_HOGTIED
+		{
+			state->companionApi->combat(playerTarget);
+		}
 	}
 
-	if (INTERIOR::GET_INTERIOR_FROM_ENTITY(player) && !state->companionApi->isSittingDown())
+	if (INTERIOR::GET_INTERIOR_FROM_ENTITY(player) && !state->companionApi->isSittingDown() && !ScriptSettings::getBool("AllowEnteringInteriors"))
 	{
 		state->currentTask = state->companionApi->waitOutsideInterior();
 		tutorial("companion_wait_outside");
@@ -368,6 +372,7 @@ void CompanionEngine::updatePrompts()
 		if (targetEntity &&
 			targetEntity != state->companionDog &&
 			!ENTITY::IS_ENTITY_DEAD(targetEntity) &&
+			distance(targetEntity, state->companionDog) <= DataFiles::DogMeta->getInt("unleash_range") &&
 			!INTERIOR::GET_INTERIOR_FROM_ENTITY(player) &&
 			PED::GET_PED_RELATIONSHIP_GROUP_HASH(targetEntity) != GAMEPLAY::GET_HASH_KEY("REL_GANG_DUTCHS") &&
 			ENTITY::_0x75DF9E73F2F005FD(targetEntity) && // _GET_ENTITY_CAN_BE_DAMAGED
