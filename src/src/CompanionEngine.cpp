@@ -511,6 +511,11 @@ void CompanionEngine::onPromptTriggered(int eventIndex)
 	}
 
 	Ped trackedEntity = eventData[4];
+	if (ENTITY::_0xC346A546612C49A9(trackedEntity)) // _GET_IS_BIRD
+	{
+		return;
+	}
+
 	Vector3 pos = entityPos(trackedEntity);
 	state->currentTask = state->companionApi->track(trackedEntity);
 	log("tracking task triggered");

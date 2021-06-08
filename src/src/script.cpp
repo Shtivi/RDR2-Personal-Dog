@@ -21,7 +21,7 @@ bool Initialize()
 {
 	player = PLAYER::PLAYER_PED_ID();
 	initializeLogger();
-	log("Dog Companion by Shtivi - BETA 1.0.0");
+	log("Dog Companion by Shtivi - 1.0.1");
 
 	DECORATOR::DECOR_REGISTER("SH_CMP_companion", 3);
 	DECORATOR::DECOR_REGISTER("SH_CMP_health_core", 3);
@@ -149,14 +149,11 @@ void main()
 
 			if (IsKeyJustUp(VK_KEY_Z))
 			{
-				Ped ped = createPed("a_c_doghusky_01", playerPos() + getForwardVector(player) * 5);
-				Ped prey = createPed("a_c_rabbit_01", playerPos() + getForwardVector(player) * 12);
+				Vehicle veh = createVehicle(VehicleHash::Cart06, playerPos() + getForwardVector(player) * 12);
+				VEHICLE::SET_VEHICLE_DOOR_OPEN(veh, 5, 0, 1);
+				Ped ped = createPed("a_c_doghusky_01", entityPos(veh) + getForwardVector(veh) * -5);
 				WAIT(1000);
-				ENTITY::SET_ENTITY_HEALTH(prey, 0, 0);
-				AI::_0xF0B4F759F35CC7F5(prey, -132773589, ped, 6, 512);
-				WAIT(1000);
-				showSubtitle(AI::_0x0CCFE72B43C9CF96(prey));
-				AI::_0x502EC17B1BED4BFA(ped, prey);
+				AI::TASK_ENTER_VEHICLE(ped, veh, -1, 3, 1, 0, 0);
 			}
 
 
