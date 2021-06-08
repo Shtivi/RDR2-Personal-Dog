@@ -101,31 +101,6 @@ void main()
 		{
 			Vector3 pos = playerPos();
 
-			Ped closest = getClosestPed(player);
-			if (isPedADog(closest))
-			{
-				revive->show();
-				if (revive->isActivatedByPlayer())
-				{
-					if (PED::_0xEBE89623EB861271(closest, 1) > 0)
-					{
-						debug(PED::_0xEBE89623EB861271(closest, 1));
-						//revive->setTargetEntity(closest);
-						//AI::_0xCD181A959CFDD7F4(player, closest, GAMEPLAY::GET_HASH_KEY("Interaction_Injection_Quick"), GAMEPLAY::GET_HASH_KEY("p_cs_syringe01x"), 0);
-						AI::_0x356088527D9EBAAD(player, closest, 0);
-					}
-					else 
-					{
-						AI::_0xCD181A959CFDD7F4(player, closest, GAMEPLAY::GET_HASH_KEY("Interaction_Food"), GAMEPLAY::GET_HASH_KEY("p_brushHorse02x"), 0);
-
-					}
-				}
-			}
-			else
-			{
-				revive->hide();
-			}
-
 			Hash weaponHash;
 			WEAPON::GET_CURRENT_PED_WEAPON(player, &weaponHash, 0, 0, 0);
 			if (weaponHash != GAMEPLAY::GET_HASH_KEY("WEAPON_UNARMED")) {
@@ -134,8 +109,6 @@ void main()
 					if (IsKeyJustUp(VK_KEY_Z)) 
 					{
 					}
-					//debug(PED::_0xEBE89623EB861271(e, 1));
-					debug(PED::_0xB655DB7582AEC805(e));
 				}
 				else
 				{
@@ -148,8 +121,6 @@ void main()
 				{
 					if (IsKeyJustUp(VK_KEY_Z)) 
 					{
-						showSubtitle(to_string(DECORATOR::DECOR_GET_INT(targetEntity, "metaped_outfit_request_name")));
-
 					}
 				}
 				else
@@ -178,16 +149,6 @@ void main()
 
 			if (IsKeyJustUp(VK_KEY_Z))
 			{
-				/*Vehicle veh = createVehicle(VehicleHash::Cart06, playerPos() + getForwardVector(player) * 12);
-				VEHICLE::SET_VEHICLE_DOOR_OPEN(veh, 5, 0, 1);
-				Vector3 vehPos = entityPos(veh);
-				Ped ped = createPed("a_c_doghusky_01", entityPos(veh) + getForwardVector(veh) * -2);
-				WAIT(1000);*/
-				Ped ped = createPed("a_c_doghusky_01", entityPos(player) + getForwardVector(player) * 2);
-				//AI::TASK_ENTER_VEHICLE(ped, veh, -1, 3, 1, 0, 0);
-				WAIT(1000);
-				//AI::_0x30A768C30D385EC5(ped, 0, 1, WeaponHash::WeaponBow, 1000, 0);
-				AI::_0x8C038A39C4A4B6D6(ped, 0, 0);
 			}
 
 
@@ -195,25 +156,15 @@ void main()
 			{
 
 				Ped ped = createPed("a_c_doghusky_01", playerPos() + getForwardVector(player) * 5);
-				//PED::_0x77FF8D35EEC6BBC4(ped, 1, 0);
 				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&ped);
-				//Ped ped = createPed("a_c_rabbit_01", playerPos() + getForwardVector(player) * 22);
-				//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
-
-				//Ped ped = createPed("a_m_m_bivroughtravellers_01", playerPos() + getForwardVector(player) * 5);
-				//AI::TASK_COMBAT_PED(ped, player, 0, 16);
 			}
 
 			if (IsKeyJustUp(VK_KEY_K))
 			{
 				Ped ped = createPed("a_m_m_bivroughtravellers_01", playerPos() + getForwardVector(player) * 12);
-				//PED::_0x5240864E847C691C(ped, 1);
 				PED::_0x39ED303390DDEAC7(ped, 1, 1, 10000, 75);
-				//Ped ped = createPed("a_c_wolf_small", playerPos() + getForwardVector(player) * 25);
-				//Ped ped = createPed("a_m_m_bivroughtravellers_01", playerPos() + getForwardVector(player) * 12);
 				PED::SET_PED_CONFIG_FLAG(ped, 6, 1);
 				DECORATOR::DECOR_SET_INT(ped, "honor_override", 0);
-
 				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&ped);
 			}
 		}
