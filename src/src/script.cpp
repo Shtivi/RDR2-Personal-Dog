@@ -169,7 +169,7 @@ void main()
 			}
 		}
 
-		if (true && IsKeyJustUp(VK_F2))
+		if (false && IsKeyJustUp(VK_F2))
 		{
 			setDebugMode(!isDebugMode());
 		}
