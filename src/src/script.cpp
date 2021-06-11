@@ -45,15 +45,9 @@ bool Initialize()
 	return true;
 }
 
-Prompt* revive;
-
 void main()
 {
 	WAIT(500);
-
-
-	revive = new Prompt("Revive", GAMEPLAY::GET_HASH_KEY("INPUT_REVIVE"), PromptMode::Standard);
-	revive->hide();
 
 
 	if (!Initialize())

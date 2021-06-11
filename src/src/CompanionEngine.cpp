@@ -373,7 +373,7 @@ void CompanionEngine::updatePrompts()
 			targetEntity != state->companionDog &&
 			!ENTITY::IS_ENTITY_DEAD(targetEntity) &&
 			distance(targetEntity, state->companionDog) <= DataFiles::DogMeta->getInt("unleash_range") &&
-			!INTERIOR::GET_INTERIOR_FROM_ENTITY(player) &&
+			(!INTERIOR::GET_INTERIOR_FROM_ENTITY(player) || ScriptSettings::getBool("AllowEnteringInteriors")) &&
 			PED::GET_PED_RELATIONSHIP_GROUP_HASH(targetEntity) != GAMEPLAY::GET_HASH_KEY("REL_GANG_DUTCHS") &&
 			ENTITY::_0x75DF9E73F2F005FD(targetEntity) && // _GET_ENTITY_CAN_BE_DAMAGED
 			PED::IS_PED_ON_FOOT(targetEntity) &&
@@ -677,7 +677,7 @@ void CompanionEngine::onWhistle(int eventIndex)
 
 	if (state->isWithinWhistlingRange)
 	{
-		if (INTERIOR::GET_INTERIOR_FROM_ENTITY(player))
+		if (INTERIOR::GET_INTERIOR_FROM_ENTITY(player) && !ScriptSettings::getBool("AllowEnteringInteriors"))
 		{
 			return;
 		}
