@@ -21,7 +21,7 @@ bool Initialize()
 {
 	player = PLAYER::PLAYER_PED_ID();
 	initializeLogger();
-	log("Dog Companion by Shtivi - BETA 1.0.0");
+	log("Dog Companion by Shtivi - 1.0.1");
 
 	DECORATOR::DECOR_REGISTER("SH_CMP_companion", 3);
 	DECORATOR::DECOR_REGISTER("SH_CMP_health_core", 3);
@@ -30,7 +30,9 @@ bool Initialize()
 		{"ShowCores", "1"},
 		{"MarkHuntedAnimals", "1"},
 		{"AllowAttackPrompt", "1"},
-		{"AttackPromptAnimalsOnly", "0"}
+		{"AttackPromptAnimalsOnly", "0"},
+		{"IgnorePlayerCombatWhenSittingDown", "1"},
+		{"AllowEnteringInteriors", "0"}
 	});
 
 	if (!DataFiles::load())
@@ -43,10 +45,16 @@ bool Initialize()
 	return true;
 }
 
+Prompt* revive;
 
 void main()
 {
 	WAIT(500);
+
+
+	revive = new Prompt("Revive", GAMEPLAY::GET_HASH_KEY("INPUT_REVIVE"), PromptMode::Standard);
+	revive->hide();
+
 
 	if (!Initialize())
 	{
@@ -101,7 +109,6 @@ void main()
 					if (IsKeyJustUp(VK_KEY_Z)) 
 					{
 					}
-
 				}
 				else
 				{
@@ -114,10 +121,6 @@ void main()
 				{
 					if (IsKeyJustUp(VK_KEY_Z)) 
 					{
-						//PED::_0x437C08DB4FEBE2BD(targetEntity, (Any*)"sick", 1.0, -1);
-						PED::_0xA762C9D6CF165E0D(targetEntity, (Any*)"MoodName", (Any*)"MoodLowHealth", 5000);
-						//PED::_0xCB9401F918CB0F75(targetEntity, (Any*)"Cold_Low_Stamina", 1, 5000);
-
 					}
 				}
 				else
@@ -146,7 +149,6 @@ void main()
 
 			if (IsKeyJustUp(VK_KEY_Z))
 			{
-				PED::_0xA5BAE410B03E7371(player, 0x39AB3C5C, 0, 0);
 			}
 
 
@@ -155,21 +157,14 @@ void main()
 
 				Ped ped = createPed("a_c_doghusky_01", playerPos() + getForwardVector(player) * 5);
 				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&ped);
-				//Ped ped = createPed("a_c_rabbit_01", playerPos() + getForwardVector(player) * 22);
-				//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
-
-				//Ped ped = createPed("a_m_m_bivroughtravellers_01", playerPos() + getForwardVector(player) * 5);
-				//AI::TASK_COMBAT_PED(ped, player, 0, 16);
 			}
 
 			if (IsKeyJustUp(VK_KEY_K))
 			{
 				Ped ped = createPed("a_m_m_bivroughtravellers_01", playerPos() + getForwardVector(player) * 12);
-				//Ped ped = createPed("a_c_wolf_small", playerPos() + getForwardVector(player) * 25);
-				//Ped ped = createPed("a_m_m_bivroughtravellers_01", playerPos() + getForwardVector(player) * 12);
+				PED::_0x39ED303390DDEAC7(ped, 1, 1, 10000, 75);
 				PED::SET_PED_CONFIG_FLAG(ped, 6, 1);
-				//DECORATOR::DECOR_SET_INT(ped, "honor_override", 0);
-
+				DECORATOR::DECOR_SET_INT(ped, "honor_override", 0);
 				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&ped);
 			}
 		}
