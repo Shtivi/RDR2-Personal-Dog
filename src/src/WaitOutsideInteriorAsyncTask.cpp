@@ -4,7 +4,7 @@ WaitOutsideInteriorAsyncTask::WaitOutsideInteriorAsyncTask(Ped ped, Ped waitFor)
 	: AsyncCompanionTask(ped)
 {
 	this->waitFor = waitFor;
-	AI::_0x524B54361229154F(ped, GAMEPLAY::GET_HASH_KEY("WORLD_ANIMAL_DOG_SITTING"), -1, 1, 1, 0, 1);
+	TASK::TASK_START_SCENARIO_IN_PLACE_HASH(ped, MISC::GET_HASH_KEY("WORLD_ANIMAL_DOG_SITTING"), -1, 1, 1, 0, 1);
 }
 
 bool WaitOutsideInteriorAsyncTask::isDone()
@@ -14,6 +14,6 @@ bool WaitOutsideInteriorAsyncTask::isDone()
 
 AsyncCompanionTask* WaitOutsideInteriorAsyncTask::getChainedTask()
 {
-	AI::CLEAR_PED_TASKS(getPed(), 1, 1);
+	TASK::CLEAR_PED_TASKS(getPed(), 1, 1);
 	return NULL;
 }

@@ -29,13 +29,13 @@ UITextArgs rightTextArgs2;
 const char* createVarString(const char* text) 
 {
     const char* result;
-    result = UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", text);
+    result = MISC::VAR_STRING(10, "LITERAL_STRING", text);
     int attempts = 500;
     while (strcmp(text, result) != 0 && attempts > 0)
     {
         log(attempts);
         attempts--;
-        result = UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", text);
+        result = MISC::VAR_STRING(10, "LITERAL_STRING", text);
     }
     log(attempts);
     log(result);
@@ -48,9 +48,9 @@ void printRightText()
     {
         rightTextArgs1.duration = rightTextDuration;
         rightTextArgs2.unk = 0;
-        rightTextArgs2.text = UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", rightText);
+        rightTextArgs2.text = MISC::VAR_STRING(10, "LITERAL_STRING", rightText);
 
-        UIUNK::_0xB2920B9760F0F36B((Any*)&rightTextArgs1, (Any*)&rightTextArgs2, 1);
+        UIFEED::_SHOW_SIMPLE_RIGHT_TEXT((Any*)&rightTextArgs1, (Any*)&rightTextArgs2, 1);
         clearRightText();
     }
 }

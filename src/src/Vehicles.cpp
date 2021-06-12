@@ -51,7 +51,7 @@ bool loadModel(Hash model, int timeout = 3000)
 
 Vehicle createVehicle(char* modelName, Vector3 pos, float heading)
 {
-	Hash model = GAMEPLAY::GET_HASH_KEY(modelName);
+	Hash model = MISC::GET_HASH_KEY(modelName);
 	return createVehicle(model, pos, heading);;
 }
 
@@ -137,7 +137,7 @@ Vector3 getClosestRoad(Vector3 source, float radius)
 
 void setVehicleCargo(Vehicle vehicle, VehicleCargoHash cargoHash)
 {
-	PROP::_0xD80FAF919A2E56EA(vehicle, cargoHash);
+	PROPSET::_0xD80FAF919A2E56EA(vehicle, cargoHash);
 }
 
 Ped getPedVehicleOccupant(Ped ped, int seat)
@@ -193,7 +193,7 @@ Vehicle createTrain(TrainConfiguration trainConfigration, Vector3 location, bool
 	bool areModelsLoading = false;
 	for (const char* model : TRAIN_MODELS)
 	{
-		int modelHash = GAMEPLAY::GET_HASH_KEY((char*)model);
+		int modelHash = MISC::GET_HASH_KEY((char*)model);
 		if (!STREAMING::HAS_MODEL_LOADED(modelHash))
 		{
 			areModelsLoading = true;
@@ -208,7 +208,7 @@ Vehicle createTrain(TrainConfiguration trainConfigration, Vector3 location, bool
 		areModelsLoading = false;
 		for (const char* model : TRAIN_MODELS)
 		{
-			int modelHash = GAMEPLAY::GET_HASH_KEY((char*)model);
+			int modelHash = MISC::GET_HASH_KEY((char*)model);
 			if (!STREAMING::HAS_MODEL_LOADED(modelHash))
 			{
 				areModelsLoading = true;
@@ -222,7 +222,7 @@ Vehicle createTrain(TrainConfiguration trainConfigration, Vector3 location, bool
 		log("failed to load all models");
 		for (const char* model : TRAIN_MODELS)
 		{
-			int modelHash = GAMEPLAY::GET_HASH_KEY((char*)model);
+			int modelHash = MISC::GET_HASH_KEY((char*)model);
 			if (!STREAMING::HAS_MODEL_LOADED(modelHash))
 			{
 				log(model);
@@ -231,7 +231,7 @@ Vehicle createTrain(TrainConfiguration trainConfigration, Vector3 location, bool
 	}
 
 	Vector3 spawnLocation = getClosestTrainTracks(location);
-	Vehicle train = VEHICLE::_0xC239DBD9A57D2A71((int)trainConfigration, spawnLocation.x, spawnLocation.y, spawnLocation.z, direction, withPeds, 0, 0);
+	Vehicle train = VEHICLE::_CREATE_MISSION_TRAIN((int)trainConfigration, spawnLocation.x, spawnLocation.y, spawnLocation.z, direction, withPeds, 0, 0);
 	VEHICLE::SET_MISSION_TRAIN_COORDS(train, location.x, location.y, location.z);
 	return train;
 }
@@ -251,7 +251,7 @@ int countTrainCarriages(Vehicle train)
 
 bool isEntityOnTrainTracks(Entity entity)
 {
-	return ENTITY::_0x857ACB0AB4BD0D55(entity); // _IS_ENTITY_ON_TRAIN_TRACK
+	return ENTITY::_IS_ENTITY_ON_TRAIN_TRACK(entity);
 }
 
 void setTrainCoords(Entity train, Vector3 coords)
@@ -261,14 +261,14 @@ void setTrainCoords(Entity train, Vector3 coords)
 
 Vector3 getClosestTrainTracks(Vector3 location)
 {
-	return VEHICLE::_0x6DE03BCC15E81710(location.x, location.y, location.z);
+	return VEHICLE::_GET_NEAREST_TRAIN_TRACK_POSITION(location.x, location.y, location.z);
 }
 
 Ped getRandomPedInTrain(Vehicle train, int ignoreCarriage)
 {
 	int carriagesCount = countTrainCarriages(train);
 	vector<int> carriages = VectorUtils::numbers(carriagesCount);
-	shuffle(carriages.begin(), carriages.end(), default_random_engine(GAMEPLAY::GET_RANDOM_INT_IN_RANGE(0, 100)));
+	shuffle(carriages.begin(), carriages.end(), default_random_engine(MISC::GET_RANDOM_INT_IN_RANGE(0, 100)));
 
 	Ped candidate = NULL;
 	for (vector<int>::iterator itr = carriages.begin(); itr != carriages.end() && !candidate; itr++)

@@ -13,18 +13,18 @@ float radToDeg(float rad)
 
 //little one-line function called '$' to convert $TRING into a hash-key:
 Hash $(std::string str) {
-	return GAMEPLAY::GET_HASH_KEY(&str[0u]);
+	return MISC::GET_HASH_KEY(&str[0u]);
 }
 
 
 //quick function to get distance between 2 points: eg - if (distanceBetween(coordsOf(player), targetCoords) < 50)
 float distanceBetween(Vector3 A, Vector3 B) {
-	return GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(A.x, A.y, A.z, B.x, B.y, B.z, 1);
+	return MISC::GET_DISTANCE_BETWEEN_COORDS(A.x, A.y, A.z, B.x, B.y, B.z, 1);
 }
 
 //quick "get random int in range 0-x" function:
 int rndInt(int start, int end) {
-	return GAMEPLAY::GET_RANDOM_INT_IN_RANGE(start, end);
+	return MISC::GET_RANDOM_INT_IN_RANGE(start, end);
 }
 
 //VECTOR AND FLOAT FUNCTIONS
@@ -230,7 +230,7 @@ Vector3 normalOf(Vector3 source)
 Vector3 around(Vector3 source, float distance, bool onGround)
 {
 	Vector3 random;
-	double radian = GAMEPLAY::GET_RANDOM_FLOAT_IN_RANGE(0, 1) * 2 * 3.14159;
+	double radian = MISC::GET_RANDOM_FLOAT_IN_RANGE(0, 1) * 2 * 3.14159;
 	random.x = cos(radian);
 	random.y = sin(radian);
 	random.z = 0;
@@ -247,7 +247,7 @@ Vector3 around(Vector3 source, float distance, bool onGround)
 
 Vector3 calculatePointInDirection(Vector3 source, float heading, float distance)
 {
-	Vector3 direction = toVector3(SYSTEM::SIN(heading), SYSTEM::COS(heading), 0);
+	Vector3 direction = toVector3(BUILTIN::SIN(heading), BUILTIN::COS(heading), 0);
 	return source + direction * distance;
 }
 

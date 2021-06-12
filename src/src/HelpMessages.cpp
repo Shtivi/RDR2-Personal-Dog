@@ -32,9 +32,9 @@ void printHelpText()
     {
         helpTextArgs1.duration = helpTextDuration;
         helpTextArgs2.unk = 0;
-        helpTextArgs2.text = UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", helpText);
+        helpTextArgs2.text = MISC::VAR_STRING(10, "LITERAL_STRING", helpText);
 
-        UIUNK::_0x049D5C615BD38BAD((Any*)&helpTextArgs1, (Any*)&helpTextArgs2, 1);
+        UIFEED::_SHOW_TOOLTIP((Any*)&helpTextArgs1, (Any*)&helpTextArgs2, 1);
         clearHelpText();
     }
 }

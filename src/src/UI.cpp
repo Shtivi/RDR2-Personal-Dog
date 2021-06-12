@@ -21,11 +21,11 @@ void showAdvancedNotification(const char* title, const char* subtitle, Hash icon
 	args1->duration = duration;
 
 	AdvancedNotificationArgs* args2 = new AdvancedNotificationArgs();
-	args2->title = UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", title);
-	args2->subtitle = UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", subtitle);
+	args2->title = MISC::VAR_STRING(10, "LITERAL_STRING", title);
+	args2->subtitle = MISC::VAR_STRING(10, "LITERAL_STRING", subtitle);
 	args2->iconDict = iconsDict;
 	args2->icon = icon;
-	UIUNK::_0x26E87218390E6729((Any*)args1, (Any*)args2, 1, 1);
+	UIFEED::_SHOW_ADVANCED_NOTIFICATION((Any*)args1, (Any*)args2, 1, 1);
 }
 
 void showRightText(const char* text, int duration)

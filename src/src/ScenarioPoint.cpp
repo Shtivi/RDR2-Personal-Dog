@@ -59,23 +59,23 @@ float ScenarioPoint::getHeading()
 
 bool ScenarioPoint::isExist()
 {
-	return getId() != 0 && AI::_0x841475AC96E794D1(getId());
+	return getId() != 0 && TASK::DOES_SCENARIO_POINT_EXIST(getId());
 }
 
 int ScenarioPoint::getScenarioHashKey()
 {
-	return GAMEPLAY::GET_HASH_KEY((char*)scenario);
+	return MISC::GET_HASH_KEY((char*)scenario);
 }
 
 int ScenarioPoint::create()
 {
 	if (entity)
 	{
-		id = AI::_0x794AB1379A74064D(entity, getScenarioHashKey(), offset.x, offset.y, offset.z, heading, 0, -1, 1); // TASK_CREATE_SCENARIO_POINT_ATTACHED_TO_ENTITY
+		id = TASK::CREATE_SCENARIO_POINT_HASH_ATTACHED_TO_ENTITY(entity, getScenarioHashKey(), offset.x, offset.y, offset.z, heading, 0, -1, 1);
 	}
 	else
 	{
-		id = AI::_0x94B745CE41DB58A1(getScenarioHashKey(), location.x, location.y, location.z, heading, 0, -1, 1);
+		id = TASK::CREATE_SCENARIO_POINT_HASH(getScenarioHashKey(), location.x, location.y, location.z, heading, 0, -1, 1);
 	}
 
 	return id;

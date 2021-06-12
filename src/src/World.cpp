@@ -3,7 +3,7 @@
 void getGroundPos(Vector3 originalPos, Vector3* outPos)
 {
 	float groundZ;
-	GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(originalPos.x, originalPos.y, originalPos.z, &groundZ, false);
+	MISC::GET_GROUND_Z_FOR_3D_COORD(originalPos.x, originalPos.y, originalPos.z, &groundZ, false);
 
 	outPos->x = originalPos.x;
 	outPos->y = originalPos.y;
@@ -15,12 +15,12 @@ float distanceBetweenEntities(Entity entity1, Entity entity2)
 	Vector3 pos1 = ENTITY::GET_ENTITY_COORDS(entity1, 1, 0);
 	Vector3 pos2 = ENTITY::GET_ENTITY_COORDS(entity2, 1, 0);
 
-	return GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, 1);
+	return MISC::GET_DISTANCE_BETWEEN_COORDS(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, 1);
 }
 
 Object createProp(char* model, Vector3 position, float heading, bool isStatic, bool isVisible)
 {
-	Hash modelHash = GAMEPLAY::GET_HASH_KEY(model);
+	Hash modelHash = MISC::GET_HASH_KEY(model);
 
 	if (!STREAMING::HAS_MODEL_LOADED(modelHash))
 	{
@@ -48,12 +48,12 @@ tm getGameTime()
 {
 	tm gameTime;
 	gameTime.tm_year = 70; // make problems only with years aroud 1970, not 1900.
-	gameTime.tm_mon = TIME::GET_CLOCK_MONTH();
-	gameTime.tm_mday = TIME::GET_CLOCK_DAY_OF_MONTH();
-	gameTime.tm_wday = TIME::GET_CLOCK_DAY_OF_WEEK();
-	gameTime.tm_hour = TIME::GET_CLOCK_HOURS();
-	gameTime.tm_min = TIME::GET_CLOCK_MINUTES();
-	gameTime.tm_sec = TIME::GET_CLOCK_SECONDS();
+	gameTime.tm_mon = CLOCK::GET_CLOCK_MONTH();
+	gameTime.tm_mday = CLOCK::GET_CLOCK_DAY_OF_MONTH();
+	gameTime.tm_wday = CLOCK::GET_CLOCK_DAY_OF_WEEK();
+	gameTime.tm_hour = CLOCK::GET_CLOCK_HOURS();
+	gameTime.tm_min = CLOCK::GET_CLOCK_MINUTES();
+	gameTime.tm_sec = CLOCK::GET_CLOCK_SECONDS();
 
 	return gameTime;
 }
@@ -62,7 +62,7 @@ RaycastResult raycast(Vector3 source, Vector3 direction, float maxDist, RaycastI
 {
 	RaycastResult result;
 	Vector3 target = source + direction * maxDist;
-	int rayHandle = SHAPETEST::_START_SHAPE_TEST_RAY(source.x, source.y, source.z, target.x, target.y, target.z, intersectionOptions, ignore, 7);
+	int rayHandle = SHAPETEST::START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE(source.x, source.y, source.z, target.x, target.y, target.z, intersectionOptions, ignore, 7);
 	SHAPETEST::GET_SHAPE_TEST_RESULT(rayHandle, (BOOL*)&result.didHit, &result.hitPos, &result.normal, &result.hitEntity);
 	return result;
 }
@@ -70,7 +70,7 @@ RaycastResult raycast(Vector3 source, Vector3 direction, float maxDist, RaycastI
 RaycastResult raycastCrosshair(float maxDist, RaycastIntersectionOptions intersectionOptions, Entity ignore)
 {
 	Vector3 source = CAM::GET_GAMEPLAY_CAM_COORD();
-	Vector3 rot = ((float)3.1452 / 180.0) * CAM::_GET_GAMEPLAY_CAM_ROT(2);
+	Vector3 rot = ((float)3.1452 / 180.0) * CAM::GET_FINAL_RENDERED_CAM_ROT(2);
 	Vector3 forward = normalOf(toVector3(
 		-sin(rot.z) * abs(cos(rot.x)),
 		cos(rot.z) * abs(cos(rot.x)),
@@ -95,7 +95,7 @@ void getGroundPos(Vector3* originalPos)
 Vector3 getGroundPos(Vector3 originalPos)
 {
 	float groundZ;
-	GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(originalPos.x, originalPos.y, originalPos.z, &groundZ, false);
+	MISC::GET_GROUND_Z_FOR_3D_COORD(originalPos.x, originalPos.y, originalPos.z, &groundZ, false);
 	return toVector3(originalPos.x, originalPos.y, groundZ);
 }
 
@@ -126,7 +126,7 @@ Vector3 playerPos()
 float getModelLength(Hash model)
 {
 	Vector3 front, back;
-	GAMEPLAY::GET_MODEL_DIMENSIONS(model, &front, &back);
+	MISC::GET_MODEL_DIMENSIONS(model, &front, &back);
 	float length = get_vector_length(front - back);
 	return length;
 }
@@ -144,7 +144,7 @@ Vehicle getClosestVehicle(Ped around)
 {
 	int nearbyEntities[5 * 2 + 2];
 	nearbyEntities[0] = 5;
-	int n = PED::GET_PED_NEARBY_VEHICLES(around, (int*)&nearbyEntities);
+	int n = PED::GET_PED_NEARBY_VEHICLES(around, (Any*)&nearbyEntities);
 
 	if (n == 0)
 	{
@@ -191,7 +191,7 @@ Ped findHogtiedTargetEntity()
 
 	if (ENTITY::IS_ENTITY_A_PED(targetEntity) &&
 		PED::IS_PED_HUMAN(targetEntity) &&
-		AI::GET_IS_TASK_ACTIVE(targetEntity, 400))
+		TASK::GET_IS_TASK_ACTIVE(targetEntity, 400))
 	{
 		return (Ped)targetEntity;
 	}
@@ -205,7 +205,7 @@ Ped getClosestPed(Ped around)
 	Ped targetEntity = NULL;
 
 	nearbyEntities[0] = 5;
-	int n = PED::GET_PED_NEARBY_PEDS(around, (int*)&nearbyEntities, -1, -1);
+	int n = PED::GET_PED_NEARBY_PEDS(around, (Any*)&nearbyEntities, -1, -1);
 
 	if (n == 0)
 	{
@@ -248,34 +248,34 @@ Vector3* getSafeCoordForPed(Vector3 destination)
 
 void loadImap(Hash imapHash)
 {
-	if (!STREAMING::_0xD779B9B910BD3B7C(imapHash))
+	if (!STREAMING::IS_IPL_ACTIVE_HASH(imapHash))
 	{
-		STREAMING::_0x59767C5A7A9AE6DA(imapHash);
+		STREAMING::REQUEST_IPL_HASH(imapHash);
 	}
 }
 
 void loadInteriorSet(Interior interior, const char* setName)
 {
-	if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interior, (char*) setName)) {
-		INTERIOR::_ENABLE_INTERIOR_PROP(interior, (char*) setName, 1);
+	if (!INTERIOR::IS_INTERIOR_ENTITY_SET_ACTIVE(interior, (char*) setName)) {
+		INTERIOR::ACTIVATE_INTERIOR_ENTITY_SET(interior, (char*) setName, 1);
 	}
 }
 
 MapAreas getMapArea(Vector3 pos)
 {
-	int town = ZONE::_0x43AD8FC02B429D33(pos.x, pos.y, pos.z, 1);
+	int town = ZONE::_GET_MAP_ZONE_AT_COORDS(pos.x, pos.y, pos.z, 1);
 	if (town) 
 	{
 		return (MapAreas)town;
 	}
 	else 
 	{
-		int district = ZONE::_0x43AD8FC02B429D33(pos.x, pos.y, pos.z, 10);
+		int district = ZONE::_GET_MAP_ZONE_AT_COORDS(pos.x, pos.y, pos.z, 10);
 		if (district) 
 		{
 			return (MapAreas)district;
 		}
-		return (MapAreas)ZONE::_0x43AD8FC02B429D33(pos.x, pos.y, pos.z, 11);
+		return (MapAreas)ZONE::_GET_MAP_ZONE_AT_COORDS(pos.x, pos.y, pos.z, 11);
 	}
 }
 
@@ -298,22 +298,22 @@ Position getClosestVehicleNode(Vector3 around, bool flipDirection)
 
 float getWindSpeed()
 {
-	return GAMEPLAY::GET_WIND_SPEED();
+	return MISC::GET_WIND_SPEED();
 }
 
 Vector3 getWindDirection()
 {
-	return GAMEPLAY::GET_WIND_DIRECTION();
+	return MISC::GET_WIND_DIRECTION();
 }
 
 void setWindDirection(float direction)
 {
-	GAMEPLAY::SET_WIND_DIRECTION(direction);
+	MISC::SET_WIND_DIRECTION(direction);
 }
 
 void setWindSpeed(float speed)
 {
-	GAMEPLAY::SET_WIND_SPEED(speed);
+	MISC::SET_WIND_SPEED(speed);
 }
 
 void setWindSpeedSmoothly(float speed, float step, float interval)
@@ -345,7 +345,7 @@ Ped findClosestPredatorAround(Ped origin, float radius)
 	
 	for (Ped current : peds)
 	{
-		if (!ENTITY::_0x5594AFE9DE0C01B7(current) || // _GET_IS_PREDATOR
+		if (!ENTITY::_GET_IS_PREDATOR(current) ||
 			ENTITY::IS_ENTITY_DEAD(current)) 
 		{
 			continue;
