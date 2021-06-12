@@ -2,27 +2,27 @@
 
 void drawText(char* text, float x, float y, int r, int g, int b, int a, bool centered, float sx, float sy, const char* font)
 {
-	UI::SET_TEXT_COLOR_RGBA(r, g, b, a);
-	UI::SET_TEXT_SCALE(sx, sy);
-	UI::SET_TEXT_CENTRE(centered);
+	HUD::_SET_TEXT_COLOR(r, g, b, a);
+	HUD::SET_TEXT_SCALE(sx, sy);
+	HUD::SET_TEXT_CENTRE(centered);
 
 	stringstream tmplate;
 	tmplate << "<FONT FACE='" << font <<"' COLOR='#ffffff'>" << text << "</FONT>";
-	const char* InsertTemplate = UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", _strdup(tmplate.str().c_str()));
-	UI::DRAW_TEXT((char*)UI::_CREATE_VAR_STRING(42, "COLOR_STRING", 0, InsertTemplate), x, y);
+	const char* InsertTemplate = MISC::VAR_STRING(10, "LITERAL_STRING", _strdup(tmplate.str().c_str()));
+	HUD::_DISPLAY_TEXT(MISC::VAR_STRING(42, "COLOR_STRING", 0, InsertTemplate), x, y);
 }
 
 void drawSprite(char* category, char* sprite, float x, float y, float scalex, float scaley, float rotation, int r, int g, int b, int a)
 {
 	float fX = x + scalex / 2;
 	float fY = y + scaley / 2;
-	if (!TEXTURE::HAS_STREAMED_TEXTURE_DICT_LOADED(category))
+	if (!TXD::HAS_STREAMED_TEXTURE_DICT_LOADED(category))
 	{
-		TEXTURE::REQUEST_STREAMED_TEXTURE_DICT(category, 0);
+		TXD::REQUEST_STREAMED_TEXTURE_DICT(category, 0);
 	}
 
 	GRAPHICS::DRAW_SPRITE(category, sprite, fX, fY, scalex, scaley, rotation, r, g, b, a, 1);
-	//TEXTURE::SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED(category);
+	//TXD::SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED(category);
 }
 
 void drawRect(float x, float y, float width, float height, int r, int g, int b, int a)

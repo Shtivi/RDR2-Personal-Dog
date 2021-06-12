@@ -2,46 +2,46 @@
 
 Prompt* createAccompanyPrompt()
 {
-	return new Prompt(DataFiles::Lang->get("interaction.accompany.promptLabel"), GAMEPLAY::GET_HASH_KEY("INPUT_WHISTLE"));
+	return new Prompt(DataFiles::Lang->get("interaction.accompany.promptLabel"), MISC::GET_HASH_KEY("INPUT_WHISTLE"));
 }
 
 Prompt* createStayPrompt()
 {
-	return new Prompt(DataFiles::Lang->get("interaction.stay.promptLabel"), GAMEPLAY::GET_HASH_KEY("INPUT_CONTEXT_X"));
+	return new Prompt(DataFiles::Lang->get("interaction.stay.promptLabel"), MISC::GET_HASH_KEY("INPUT_CONTEXT_X"));
 }
 
 Prompt* createFollowPrompt()
 {
-	return new Prompt(DataFiles::Lang->get("interaction.follow.promptLabel"), GAMEPLAY::GET_HASH_KEY("INPUT_CONTEXT_X"));
+	return new Prompt(DataFiles::Lang->get("interaction.follow.promptLabel"), MISC::GET_HASH_KEY("INPUT_CONTEXT_X"));
 }
 
 Prompt* createFeedPrompt()
 {
-	Prompt* prompt = new Prompt(DataFiles::Lang->get("interaction.feed.promptLabel"), GAMEPLAY::GET_HASH_KEY("INPUT_INTERACT_OPTION1"));
+	Prompt* prompt = new Prompt(DataFiles::Lang->get("interaction.feed.promptLabel"), MISC::GET_HASH_KEY("INPUT_INTERACT_OPTION1"));
 
 	return prompt;
 }
 
 Prompt* createPraisePrompt()
 {
-	return new Prompt(DataFiles::Lang->get("interaction.praise.promptLabel"), GAMEPLAY::GET_HASH_KEY("INPUT_INTERACT_OPTION1"));
+	return new Prompt(DataFiles::Lang->get("interaction.praise.promptLabel"), MISC::GET_HASH_KEY("INPUT_INTERACT_OPTION1"));
 }
 
 Prompt* createDismissPrompt()
 {
-	return new Prompt(DataFiles::Lang->get("interaction.dismiss.promptLabel"), GAMEPLAY::GET_HASH_KEY("INPUT_INTERACT_OPTION2"), PromptMode::SemiHold);
+	return new Prompt(DataFiles::Lang->get("interaction.dismiss.promptLabel"), MISC::GET_HASH_KEY("INPUT_INTERACT_OPTION2"), PromptMode::SemiHold);
 }
 
 Prompt* createRenamePrompt()
 {
-	return new Prompt(DataFiles::Lang->get("interaction.rename.promptLabel"), GAMEPLAY::GET_HASH_KEY("INPUT_LOOK_BEHIND"), PromptMode::SemiHold);
+	return new Prompt(DataFiles::Lang->get("interaction.rename.promptLabel"), MISC::GET_HASH_KEY("INPUT_LOOK_BEHIND"), PromptMode::SemiHold);
 }
 
 Prompt* createAttackPrompt(const char* dogName)
 {
 	return new Prompt(
 		string(DataFiles::Lang->get("interaction.attack.promptLabel")).append(" ").append(dogName).c_str(), 
-		GAMEPLAY::GET_HASH_KEY((char*)ScriptSettings::get("AttackPromptControlName").c_str()), 
+		MISC::GET_HASH_KEY((char*)ScriptSettings::get("AttackPromptControlName").c_str()), 
 		PromptMode::SemiHold);
 }
 
@@ -49,7 +49,7 @@ Prompt* createRetrieveDogPrompt(const char* dogName)
 {
 	return new Prompt(
 		string(DataFiles::Lang->get("interaction.retrieve_dog.promptLabel")).append(" ").append(dogName).c_str(),
-		GAMEPLAY::GET_HASH_KEY("INPUT_LOOK_BEHIND"),
+		MISC::GET_HASH_KEY("INPUT_LOOK_BEHIND"),
 		PromptMode::SemiHold);
 }
 
@@ -97,29 +97,29 @@ void CompanionEngine::start()
 Ped CompanionEngine::spawnDog()
 {
 	Ped dog = createPed(DataFiles::Dog->getInt("model"), *getSafeCoordForPed(playerPos() + getForwardVector(player)));
-	PED::_0x77FF8D35EEC6BBC4(dog, DataFiles::Dog->getInt("preset_index"), 0); // _SET_PED_OUTFIT_PRESET
+	PED::_SET_PED_OUTFIT_PRESET(dog, DataFiles::Dog->getInt("preset_index"), 0); // _SET_PED_OUTFIT_PRESET
 	return dog;
 }
 
 void CompanionEngine::update()
 {
-	int n = SCRIPT::GET_NUMBER_OF_EVENTS(0);
+	int n = SCRIPTS::GET_NUMBER_OF_EVENTS(0);
 	for (int i = 0; i < n; i++)
 	{
-		int eventType = SCRIPT::GET_EVENT_AT_INDEX(0, i);
-		if (eventType == GAMEPLAY::GET_HASH_KEY("EVENT_PED_ANIMAL_INTERACTION"))
+		int eventType = SCRIPTS::GET_EVENT_AT_INDEX(0, i);
+		if (eventType == MISC::GET_HASH_KEY("EVENT_PED_ANIMAL_INTERACTION"))
 		{
 			onAnimalInteraction(i);
 		}
-		else if (eventType == GAMEPLAY::GET_HASH_KEY("EVENT_SHOT_FIRED_BULLET_IMPACT"))
+		else if (eventType == MISC::GET_HASH_KEY("EVENT_SHOT_FIRED_BULLET_IMPACT"))
 		{
 			onBulletImpact(i);
 		}
-		else if (eventType == GAMEPLAY::GET_HASH_KEY("EVENT_PLAYER_PROMPT_TRIGGERED"))
+		else if (eventType == MISC::GET_HASH_KEY("EVENT_PLAYER_PROMPT_TRIGGERED"))
 		{
 			onPromptTriggered(i);
 		}
-		else if (eventType == GAMEPLAY::GET_HASH_KEY("EVENT_PED_WHISTLE"))
+		else if (eventType == MISC::GET_HASH_KEY("EVENT_PED_WHISTLE"))
 		{
 			onWhistle(i);
 		}
@@ -156,7 +156,7 @@ void CompanionEngine::update()
 	if (!state->didPlayerHadControlLastFrame && 
 		PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && 
 		distance(player, state->companionDog) >= DataFiles::DogMeta->getInt("auto_retrieve.min_distance") &&
-		!GAMEPLAY::GET_MISSION_FLAG())
+		!MISC::GET_MISSION_FLAG())
 	{
 		log("automatically retrieving dog");
 		CompanionCommands::commandRetrieve(state);
@@ -170,7 +170,7 @@ void CompanionEngine::update()
 		PED::SET_PED_AS_GROUP_MEMBER(state->companionDog, PED::GET_PED_GROUP_INDEX(player));
 	}
 
-	if (CONTROLS::IS_CONTROL_JUST_RELEASED(0, GAMEPLAY::GET_HASH_KEY("INPUT_WHISTLE")))
+	if (PAD::IS_CONTROL_JUST_RELEASED(0, MISC::GET_HASH_KEY("INPUT_WHISTLE")))
 	{
 		onWhistle(0);
 	}
@@ -212,10 +212,10 @@ void CompanionEngine::scanCompanionSurrounding()
 {
 	if (PED::IS_PED_IN_MELEE_COMBAT(player) && (!state->companionApi->isSittingDown() || !ScriptSettings::getBool("IgnorePlayerCombatWhenSittingDown")))
 	{
-		Ped playerTarget = PED::_0xCD66FEA29400A0B5(player); // GET_CURRENT_TARGET_FOR_PED
+		Ped playerTarget = PED::GET_CURRENT_TARGET_FOR_PED(player);
 		if (playerTarget && 
-			!PED::_0x3AA24CCC0D451379(playerTarget) && // IS_PED_HOGTIED 
-			!PED::_0xD453BB601D4A606E(playerTarget)) // _IS_PED_BEING_HOGTIED
+			!PED::IS_PED_HOGTIED(playerTarget) &&
+			!PED::_IS_PED_BEING_HOGTIED(playerTarget))
 		{
 			state->companionApi->combat(playerTarget);
 		}
@@ -227,13 +227,13 @@ void CompanionEngine::scanCompanionSurrounding()
 		tutorial("companion_wait_outside");
 	}
 
-	if (SYSTEM::TIMERA() <= DataFiles::DogMeta->getInt("scan_surrounding_interval") ||
+	if (BUILTIN::TIMERA() <= DataFiles::DogMeta->getInt("scan_surrounding_interval") ||
 		!state->isWithinWhistlingRange ||
 		state->companionApi->isInCombat())
 	{
 		return;
 	}
-	SYSTEM::SETTIMERA(0);
+	BUILTIN::SETTIMERA(0);
 
 	if (!state->calmTimer.isStarted() || state->calmTimer.getElapsedSeconds() >= DataFiles::DogMeta->getInt("calmTimeout"))
 	{
@@ -273,11 +273,11 @@ void CompanionEngine::updateCompanionStats()
 		state->statsTimer.start();
 	}
 
-	if (SYSTEM::TIMERB() > DataFiles::DogMeta->getInt("core_drain_rate") * 1000)
+	if (BUILTIN::TIMERB() > DataFiles::DogMeta->getInt("core_drain_rate") * 1000)
 	{
 		int nextHealthCoreValue = max(0, currentHealthCoreValue - DataFiles::DogMeta->getFloat("core_drain_impact") * 100);
 		
-		SYSTEM::SETTIMERB(0);
+		BUILTIN::SETTIMERB(0);
 		DataFiles::Dog->set("health_core", nextHealthCoreValue);
 		DataFiles::Dog->save();
 
@@ -312,7 +312,7 @@ void CompanionEngine::updatePrompts()
 
 	if (distance(player, state->companionDog) < 2)
 	{
-		if (PED::_0xA911EE21EDF69DAF(player) && // IS_PED_CARRYING_SOMETHING
+		if (PED::IS_PED_CARRYING_SOMETHING(player) &&
 			state->companionApi->isEntityEatable(findCarriedPedBy(player)))
 		{
 			if (!state->companionApi->isBegging())
@@ -374,12 +374,12 @@ void CompanionEngine::updatePrompts()
 			!ENTITY::IS_ENTITY_DEAD(targetEntity) &&
 			distance(targetEntity, state->companionDog) <= DataFiles::DogMeta->getInt("unleash_range") &&
 			(!INTERIOR::GET_INTERIOR_FROM_ENTITY(player) || ScriptSettings::getBool("AllowEnteringInteriors")) &&
-			PED::GET_PED_RELATIONSHIP_GROUP_HASH(targetEntity) != GAMEPLAY::GET_HASH_KEY("REL_GANG_DUTCHS") &&
-			ENTITY::_0x75DF9E73F2F005FD(targetEntity) && // _GET_ENTITY_CAN_BE_DAMAGED
+			PED::GET_PED_RELATIONSHIP_GROUP_HASH(targetEntity) != MISC::GET_HASH_KEY("REL_GANG_DUTCHS") &&
+			ENTITY::_GET_ENTITY_CAN_BE_DAMAGED(targetEntity) &&
 			PED::IS_PED_ON_FOOT(targetEntity) &&
 			!isPedADog(targetEntity) &&
-			!PED::_0x772A1969F649E902(ENTITY::GET_ENTITY_MODEL(targetEntity)) && // _IS_THIS_MODEL_A_HORSE
-			(ENTITY::_0x9A100F1CF4546629(targetEntity) || !ScriptSettings::getBool("AttackPromptAnimalsOnly")))
+			!PED::_IS_THIS_MODEL_A_HORSE(ENTITY::GET_ENTITY_MODEL(targetEntity)) &&
+			(ENTITY::GET_IS_ANIMAL(targetEntity) || !ScriptSettings::getBool("AttackPromptAnimalsOnly")))
 		{
 			if (!state->attackPrompt || state->attackPrompt->getTargetEntity() != targetEntity)
 			{
@@ -447,12 +447,12 @@ void CompanionEngine::updateGUI()
 		state->companionApi->getHealthRate() < DataFiles::DogMeta->getFloat("low_health_threshold"))
 	{	
 		state->coresUI->show();
-		UI::_0xD4EE21B7CC7FD350(true); // _SHOW_HORSE_CORES
+		HUD::_SHOW_HORSE_CORES(true);
 	}
 	else
 	{
 		state->coresUI->hide();
-		UI::_0xD4EE21B7CC7FD350(false); // _SHOW_HORSE_CORES
+		HUD::_SHOW_HORSE_CORES(false);
 	}
 
 	state->coresUI->update();
@@ -466,7 +466,7 @@ void CompanionEngine::onAnimalInteraction(int eventIndex)
 	}
 
 	int arr[10];
-	if (!SCRIPT::GET_EVENT_DATA(0, eventIndex, arr, 3))
+	if (!SCRIPTS::GET_EVENT_DATA(0, eventIndex, (Any*)arr, 3))
 	{
 		log("WARN: animalInteraction event has no data");
 		return;
@@ -475,7 +475,7 @@ void CompanionEngine::onAnimalInteraction(int eventIndex)
 	int interactionType = arr[4];
 	int animalPedId = arr[2];
 
-	if (arr[0] == player && interactionType == GAMEPLAY::GET_HASH_KEY("Interaction_Dog_Patting") && isPedADog(animalPedId))
+	if (arr[0] == player && interactionType == MISC::GET_HASH_KEY("Interaction_Dog_Patting") && isPedADog(animalPedId))
 	{
 		state->candidateDog = animalPedId;
 		if (state->accompanyPrompt)
@@ -500,7 +500,7 @@ void CompanionEngine::onPromptTriggered(int eventIndex)
 	}
 
 	int eventData[30];
-	if (!SCRIPT::GET_EVENT_DATA(0, eventIndex, eventData, 10))
+	if (!SCRIPTS::GET_EVENT_DATA(0, eventIndex, (Any*)eventData, 10))
 	{
 		return;
 	}
@@ -511,7 +511,7 @@ void CompanionEngine::onPromptTriggered(int eventIndex)
 	}
 
 	Ped trackedEntity = eventData[4];
-	if (ENTITY::_0xC346A546612C49A9(trackedEntity)) // _GET_IS_BIRD
+	if (ENTITY::_GET_IS_BIRD(trackedEntity))
 	{
 		return;
 	}
@@ -563,15 +563,15 @@ void CompanionEngine::accompanyDog(Ped dog)
 
 	PED::SET_PED_CONFIG_FLAG(dog, 154, true); // PCF_UseFollowLeaderThreatResponse
 
-	ANIMALTUNING::_0x9FF1E042FA597187(dog, 44, 0); // ATB_StartFleeDecisionMakerDuringAlertedState
-	ANIMALTUNING::_0x9FF1E042FA597187(dog, 32, 1); // ATB_NeverRetreatFromMelee
+	FLOCK::SET_ANIMAL_TUNING_BOOL_PARAM(dog, 44, 0); // ATB_StartFleeDecisionMakerDuringAlertedState
+	FLOCK::SET_ANIMAL_TUNING_BOOL_PARAM(dog, 32, 1); // ATB_NeverRetreatFromMelee
 
-	ANIMALTUNING::_0xCBDA22C87977244F(dog, 74, 1); // ATF_ThreatResponseCombatProbability
-	ANIMALTUNING::_0xCBDA22C87977244F(dog, 80, 1); // ATF_ThreatResponseLoudNoiseFleeOrCombatRange
-	ANIMALTUNING::_0xCBDA22C87977244F(dog, 115, 1); // ATF_ThreatResponseNoiseSmallCaliberFleeOrCombatRange
-	ANIMALTUNING::_0xCBDA22C87977244F(dog, 117, 1); // ATF_ThreatResponseNoiseMediumCaliberFleeOrCombatRange
-	ANIMALTUNING::_0xCBDA22C87977244F(dog, 119, 1); // ATF_ThreatResponseNoiseBigCaliberFleeOrCombatRange
-	ANIMALTUNING::_0xCBDA22C87977244F(dog, 165, 5);
+	FLOCK::SET_ANIMAL_TUNING_FLOAT_PARAM(dog, 74, 1); // ATF_ThreatResponseCombatProbability
+	FLOCK::SET_ANIMAL_TUNING_FLOAT_PARAM(dog, 80, 1); // ATF_ThreatResponseLoudNoiseFleeOrCombatRange
+	FLOCK::SET_ANIMAL_TUNING_FLOAT_PARAM(dog, 115, 1); // ATF_ThreatResponseNoiseSmallCaliberFleeOrCombatRange
+	FLOCK::SET_ANIMAL_TUNING_FLOAT_PARAM(dog, 117, 1); // ATF_ThreatResponseNoiseMediumCaliberFleeOrCombatRange
+	FLOCK::SET_ANIMAL_TUNING_FLOAT_PARAM(dog, 119, 1); // ATF_ThreatResponseNoiseBigCaliberFleeOrCombatRange
+	FLOCK::SET_ANIMAL_TUNING_FLOAT_PARAM(dog, 165, 5);
 	ENTITY::SET_ENTITY_MAX_HEALTH(dog, DataFiles::Dog->getInt("max_health"));
 	ENTITY::SET_ENTITY_HEALTH(dog, ENTITY::GET_ENTITY_MAX_HEALTH(dog, 0), 0);
 	DECORATOR::DECOR_SET_INT(state->companionDog, "SH_CMP_health_core", DataFiles::Dog->getInt("health_core"));
@@ -579,11 +579,11 @@ void CompanionEngine::accompanyDog(Ped dog)
 	Blip dogBlip = createBlip(dog, 0x19365607);
 	state->companionBlip = dogBlip;
 	setBlipLabel(dogBlip, DataFiles::Lang->get("companion.defaultBlipName"));
-	RADAR::_0x662D364ABF16DE2F(dogBlip, 0xB93E613);
+	MAP::BLIP_ADD_MODIFIER(dogBlip, 0xB93E613);
 
-	PED::_0x01B21B81865E2A1F(dog, 0); // _SET_PED_SCENT
+	PED::_SET_PED_SCENT(dog, 0);
 
-	SYSTEM::SETTIMERA(0);
+	BUILTIN::SETTIMERA(0);
 
 	state->stayPrompt = createStayPrompt();
 	state->stayPrompt->setTargetEntity(state->companionDog);
@@ -631,16 +631,16 @@ void CompanionEngine::onBulletImpact(int eventIndex)
 	}
 
 	int arr[1];
-	if (!SCRIPT::GET_EVENT_DATA(0, eventIndex, arr, 1))
+	if (!SCRIPTS::GET_EVENT_DATA(0, eventIndex, (Any*)arr, 1))
 	{
 		return;
 	}
 	
 	int entityId = arr[0];
 	if (ENTITY::IS_ENTITY_DEAD(entityId) &&
-		ENTITY::_0x9A100F1CF4546629(entityId) /* IS_PED_ANIMAL */ &&
-		!PED::_0x772A1969F649E902(ENTITY::GET_ENTITY_MODEL(entityId) /*_IS_THIS_MODEL_A_HORSE*/) &&
-		!ENTITY::_0x5594AFE9DE0C01B7(entityId) && // _GET_IS_PREDATOR
+		ENTITY::GET_IS_ANIMAL(entityId) &&
+		!PED::_IS_THIS_MODEL_A_HORSE(ENTITY::GET_ENTITY_MODEL(entityId)) &&
+		!ENTITY::_GET_IS_PREDATOR(entityId) &&
 		PED::GET_PED_SOURCE_OF_DEATH(entityId) == player)
 	{
 		float distanceToAnimal = distance(player, entityId);
@@ -665,7 +665,7 @@ void CompanionEngine::onWhistle(int eventIndex)
 	}
 
 	int arr[10];
-	if (!SCRIPT::GET_EVENT_DATA(0, eventIndex, arr, 2))
+	if (!SCRIPTS::GET_EVENT_DATA(0, eventIndex, (Any*)arr, 2))
 	{
 		return;
 	}
@@ -742,7 +742,7 @@ void CompanionEngine::dismissCompanion()
 {
 	log("companion dismissed");
 	state->companionApi->dismiss();
-	AI::_0xCD181A959CFDD7F4(player, state->companionDog, GAMEPLAY::GET_HASH_KEY("Interaction_Dog_Patting"), 0, 0);
+	TASK::TASK_ANIMAL_INTERACTION(player, state->companionDog, MISC::GET_HASH_KEY("Interaction_Dog_Patting"), 0, 0);
 	PED::REMOVE_PED_FROM_GROUP(state->companionDog);
 	PED::SET_PED_CAN_BE_TARGETTED_BY_PLAYER(state->companionDog, PLAYER::PLAYER_ID(), true);
 	PED::SET_PED_RELATIONSHIP_GROUP_HASH(state->companionDog, PED::GET_PED_RELATIONSHIP_GROUP_DEFAULT_HASH(state->companionDog));

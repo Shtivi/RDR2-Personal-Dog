@@ -9,7 +9,7 @@
 #include <windows.h>
 
 typedef DWORD Void;
-typedef DWORD Any;
+typedef uint64_t Any;
 typedef DWORD uint;
 typedef DWORD Hash;
 typedef int Entity;
@@ -32,8 +32,17 @@ typedef int CoverPoint;
 typedef int Camera;
 typedef int TaskSequence;
 typedef int ColourIndex;
+typedef int Instructional;
 typedef int Sphere;
 typedef int ScrHandle;
+typedef int Scaleform;
+typedef int AnimScene;
+typedef int UIPrompt;
+typedef int PopZone;
+typedef int Volume;
+typedef int PropSet;
+typedef int ItemSet;
+typedef int PersChar;
 
 #define ALIGN8 __declspec(align(8))
 

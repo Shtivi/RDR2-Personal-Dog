@@ -19,7 +19,7 @@ AttachedRope::AttachedRope(Entity entity1, Entity entity2, const char* bone1, co
 
 	if (length <= 0)
 	{
-		length = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, true);
+		length = MISC::GET_DISTANCE_BETWEEN_COORDS(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, true);
 	}
 
 	this->entity1 = entity1;
@@ -27,10 +27,10 @@ AttachedRope::AttachedRope(Entity entity1, Entity entity2, const char* bone1, co
 	this->ropeLength = length;
 	this->bone1 = bone1;
 	this->bone2 = bone2;
-	this->ropeId = ROPE::ADD_ROPE(pos1.x, pos1.y, pos1.z, 0, 0, 0, length, 14, length + 5, 1.0f, 1.0f, 0, 1, true, 1.25f, true, 0, 0);
-	ROPE::_0x462FF2A432733A44(ropeId, entity1, entity2, 0, 0, 0, 0, 0, 0, (Any*)bone1, (Any*)bone2);
-	ROPE::ACTIVATE_PHYSICS(ropeId);
-	ROPE::_0x3C6490D940FF5D0B(ropeId, 0, (Any*)"noose01x_Rope_03", length, 0);
+	this->ropeId = PHYSICS::ADD_ROPE(pos1.x, pos1.y, pos1.z, 0, 0, 0, length, 14, length + 5, 1.0f, 1.0f, 0, 1, true, 1.25f, true, 0, 0);
+	PHYSICS::_ATTACH_ENTITIES_TO_ROPE_2(ropeId, entity1, entity2, 0, 0, 0, 0, 0, 0, bone1, bone2);
+	PHYSICS::ACTIVATE_PHYSICS(ropeId);
+	PHYSICS::_0x3C6490D940FF5D0B(ropeId, 0, (Any*)"noose01x_Rope_03", length, 0);
 
 	this->isAttachedToMap = false;
 	this->isEntityHanging = false;
@@ -60,13 +60,13 @@ Entity AttachedRope::getBase()
 
 bool AttachedRope::isExist()
 {
-	return ROPE::GET_ROPE_VERTEX_COUNT(ropeId) > 0;
+	return PHYSICS::GET_ROPE_VERTEX_COUNT(ropeId) > 0;
 }
 
 void AttachedRope::startWinding() {
 	if (!isWinding && canWind()) 
 	{
-		ROPE::START_ROPE_WINDING(this->ropeId);
+		PHYSICS::START_ROPE_WINDING(this->ropeId);
 		stopUnwinding();
 		isWinding = true;
 
@@ -77,17 +77,17 @@ void AttachedRope::startWinding() {
 	}
 }
 
-void AttachedRope::stopWinding() 
+void AttachedRope::stopWinding()
 {
-	ROPE::STOP_ROPE_WINDING(this->ropeId);
+	PHYSICS::STOP_ROPE_WINDING(this->ropeId);
 	isWinding = false;
 }
 
-void AttachedRope::startUnwinding() 
+void AttachedRope::startUnwinding()
 {
 	if (!isUnwinding && canUnwind())
 	{
-		ROPE::START_ROPE_UNWINDING_FRONT(this->ropeId);
+		PHYSICS::START_ROPE_UNWINDING_FRONT(this->ropeId);
 		stopWinding();
 		isUnwinding = true;
 	}
@@ -95,11 +95,11 @@ void AttachedRope::startUnwinding()
 
 void AttachedRope::stopUnwinding()
 {
-	ROPE::STOP_ROPE_UNWINDING_FRONT(this->ropeId);
+	PHYSICS::STOP_ROPE_UNWINDING_FRONT(this->ropeId);
 	isUnwinding = false;
 }
 
-bool AttachedRope::canWind() 
+bool AttachedRope::canWind()
 {
 	return isExist() && distanceBetweenEntities(entity1, entity2) >= 1.0f;
 }
@@ -141,14 +141,14 @@ int AttachedRope::update()
 		if (isEntityHanging && heightAboveGround < HANGING_TRESHOLD)
 		{
 			isEntityHanging = false;
-			AI::CLEAR_PED_TASKS(ped, 0, 0);
+			TASK::CLEAR_PED_TASKS(ped, 0, 0);
 			wait = 500;
 		}
 
 		if (!isEntityHanging && heightAboveGround >= HANGING_TRESHOLD)
 		{
 			isEntityHanging = true;
-			AI::CLEAR_PED_TASKS_IMMEDIATELY(ped, 0, 0);
+			TASK::CLEAR_PED_TASKS_IMMEDIATELY(ped, 0, 0);
 			playAnimation(ped, "lasso_neck", "ai_ragdoll@lasso", -1, 1, -1, 2065);
 		}
 
@@ -173,7 +173,7 @@ int AttachedRope::update()
 
 Object AttachedRope::createMapProp(char* model, Vector3 position)
 {
-	Object prop = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY(model), position.x, position.y, position.z, false, false, true, 0, 0);
+	Object prop = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY(model), position.x, position.y, position.z, false, false, true, 0, 0);
 	ENTITY::FREEZE_ENTITY_POSITION(prop, true);
 	ENTITY::SET_ENTITY_VISIBLE(prop, true);
 	OBJECT::PLACE_OBJECT_ON_GROUND_PROPERLY(prop, 0);

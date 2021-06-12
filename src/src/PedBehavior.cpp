@@ -85,7 +85,7 @@ bool PedBehavior::getPersistBlip()
 
 void PedBehavior::addEnemyBlip()
 {
-	if (!RADAR::DOES_BLIP_EXIST(RADAR::GET_BLIP_FROM_ENTITY(ped())))
+	if (!MAP::DOES_BLIP_EXIST(MAP::GET_BLIP_FROM_ENTITY(ped())))
 	{
 		createBlip(ped(), BLIP_STYLE_ENEMY);
 	}
@@ -95,7 +95,7 @@ void PedBehavior::removeBlip()
 {
 	if (!_persistBlip)
 	{
-		Blip pedBlip = RADAR::GET_BLIP_FROM_ENTITY(ped());
+		Blip pedBlip = MAP::GET_BLIP_FROM_ENTITY(ped());
 		deleteBlipSafe(&pedBlip);
 	}
 }
@@ -105,13 +105,13 @@ void PedBehavior::fight(Ped enemy)
 	// 117440512 unmount
 	// 33554432 flee?
 	PED::REGISTER_TARGET(ped(), enemy, 0);
-	AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(ped(), 100, 33554432, 16);
-	//AI::TASK_COMBAT_PED(ped(), enemy, 0, 16);
+	TASK::TASK_COMBAT_HATED_TARGETS_AROUND_PED(ped(), 100, 33554432, 16);
+	//TASK::TASK_COMBAT_PED(ped(), enemy, 0, 16);
 }
 
 void PedBehavior::flee(Ped from)
 {
 	playAmbientSpeech(ped(), "SCARED_HELP");
-	AI::_0xFD45175A6DFD7CE9(ped(), from, 3, 0, -999.0f, -1, 0);
+	TASK::TASK_FLEE_PED(ped(), from, 3, 0, -999.0f, -1, 0);
 	_isActive = false;
 }

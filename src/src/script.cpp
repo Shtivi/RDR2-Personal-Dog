@@ -97,7 +97,7 @@ void main()
 
 			Hash weaponHash;
 			WEAPON::GET_CURRENT_PED_WEAPON(player, &weaponHash, 0, 0, 0);
-			if (weaponHash != GAMEPLAY::GET_HASH_KEY("WEAPON_UNARMED")) {
+			if (weaponHash != MISC::GET_HASH_KEY("WEAPON_UNARMED")) {
 				Entity e;
 				if (PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &e) /*&& distanceBetweenEntities(player, e) < 20*/) {
 					if (IsKeyJustUp(VK_KEY_Z)) 
@@ -129,7 +129,7 @@ void main()
 			}
 
 
-			PURSUIT::CLEAR_CURRENT_PURSUIT();
+			LAW::_CLEAR_CURRENT_PURSUIT();
 			
 			if (IsKeyJustUp(VK_KEY_X))
 			{
@@ -137,7 +137,7 @@ void main()
 
 			if (IsKeyJustUp(VK_F1))
 			{
-				AI::CLEAR_PED_TASKS(player, 1, 1);
+				TASK::CLEAR_PED_TASKS(player, 1, 1);
 			}
 
 
@@ -156,7 +156,7 @@ void main()
 			if (IsKeyJustUp(VK_KEY_K))
 			{
 				Ped ped = createPed("a_m_m_bivroughtravellers_01", playerPos() + getForwardVector(player) * 12);
-				PED::_0x39ED303390DDEAC7(ped, 1, 1, 10000, 75);
+				PED::_SET_PED_INCAPACITATION_MODIFIERS(ped, 1, 1, 10000, 75);
 				PED::SET_PED_CONFIG_FLAG(ped, 6, 1);
 				DECORATOR::DECOR_SET_INT(ped, "honor_override", 0);
 				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&ped);
@@ -179,7 +179,7 @@ void ScriptMain()
 }
 
 void debug(const char* text) {
-	UI::DRAW_TEXT((char*)UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", text), 0, 0);
+	HUD::_DISPLAY_TEXT(MISC::VAR_STRING(10, "LITERAL_STRING", text), 0, 0);
 }
 
 void debug(string text) {
@@ -212,7 +212,7 @@ void logPlayerPos()
 {
 	Vector3 playerPos = entityPos(player);
 	float ground;
-	GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
+	MISC::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
 	std::stringstream output;
 	output << "\n"
 		<< playerPos.x << ", " << playerPos.y << ", " << playerPos.z << "\n"

@@ -53,19 +53,19 @@ void showToast()
 	if (toastTitle[0])
 	{
 		int i = 0;
-		while (!TEXTURE::HAS_STREAMED_TEXTURE_DICT_LOADED((char*)toastIconsDict) && i < 20)
+		while (!TXD::HAS_STREAMED_TEXTURE_DICT_LOADED((char*)toastIconsDict) && i < 20)
 		{
-			TEXTURE::REQUEST_STREAMED_TEXTURE_DICT((char*)toastIconsDict, 0);
+			TXD::REQUEST_STREAMED_TEXTURE_DICT((char*)toastIconsDict, 0);
 			i++;
 			WAIT(100);
 		}
 
-		toastArgs2.icon = GAMEPLAY::GET_HASH_KEY(toastIcon);
-		toastArgs2.iconDict = GAMEPLAY::GET_HASH_KEY(toastIconsDict);
-		toastArgs2.title = UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", toastTitle);
-		toastArgs2.subtitle = UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", toastSubtitle);
+		toastArgs2.icon = MISC::GET_HASH_KEY(toastIcon);
+		toastArgs2.iconDict = MISC::GET_HASH_KEY(toastIconsDict);
+		toastArgs2.title = MISC::VAR_STRING(10, "LITERAL_STRING", toastTitle);
+		toastArgs2.subtitle = MISC::VAR_STRING(10, "LITERAL_STRING", toastSubtitle);
 
-		UIUNK::_0x26E87218390E6729((Any*)&toastArgs1, (Any*)&toastArgs2, 1, 1);
+		UIFEED::_SHOW_ADVANCED_NOTIFICATION((Any*)&toastArgs1, (Any*)&toastArgs2, 1, 1);
 		clearToast();
 	}
 }

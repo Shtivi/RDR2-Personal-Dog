@@ -17,7 +17,7 @@ bool BarkAsyncTask::isDone()
 
 void BarkAsyncTask::update()
 {
-	if (!AUDIO::_0xC265DF9FB44A9FBD(getPed()))
+	if (!AUDIO::IS_ANIMAL_VOCALIZATION_PLAYING(getPed()))
 	{
 		if ((int)taskTimer.getElapsedSeconds() % 2 == 1)
 		{

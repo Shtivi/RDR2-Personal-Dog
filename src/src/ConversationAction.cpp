@@ -14,12 +14,12 @@ Ped ConversationAction::getPerformer()
 
 void ConversationAction::play()
 {
-	AI::TASK_PERFORM_SEQUENCE(performer, *sequence);
+	TASK::TASK_PERFORM_SEQUENCE(performer, *sequence);
 }
 
 bool ConversationAction::isPlaying()
 {
-	int progress = AI::GET_SEQUENCE_PROGRESS(performer);
+	int progress = TASK::GET_SEQUENCE_PROGRESS(performer);
 	return progress != -1 && progress < numberOfTasks;
 }
 

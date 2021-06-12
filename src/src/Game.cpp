@@ -16,10 +16,10 @@ void stopMusic(const char* musicName)
 
 const char* getKeyboardInput(const char* title, const char* subtitle, const char* placeholder, int maxInputLength)
 {
-	GAMEPLAY::DISPLAY_ONSCREEN_KEYBOARD(
+	MISC::DISPLAY_ONSCREEN_KEYBOARD(
 		1,
-		(char*)UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", title), 
-		(char*)UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", subtitle), 
+		(char*)MISC::VAR_STRING(10, "LITERAL_STRING", title), 
+		(char*)MISC::VAR_STRING(10, "LITERAL_STRING", subtitle), 
 		(char*)placeholder, 
 		"", 
 		"", 
@@ -29,7 +29,7 @@ const char* getKeyboardInput(const char* title, const char* subtitle, const char
 	int result = 0;
 	while (!result)
 	{
-		result = GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD();
+		result = MISC::UPDATE_ONSCREEN_KEYBOARD();
 		WAIT(0);
 	}
 
@@ -38,14 +38,14 @@ const char* getKeyboardInput(const char* title, const char* subtitle, const char
 		return NULL;
 	}
 
-	return GAMEPLAY::GET_ONSCREEN_KEYBOARD_RESULT();
+	return MISC::GET_ONSCREEN_KEYBOARD_RESULT();
 }
 
 int* getEventData(int eventIndex, int eventSize, int section)
 {
 	int* arr = new int[eventSize];
 
-	if (!SCRIPT::GET_EVENT_DATA(section, eventIndex, arr, eventSize))
+	if (!SCRIPTS::GET_EVENT_DATA(section, eventIndex, (Any*)arr, eventSize))
 	{
 		log("unexpected error: event has no data.");
 		return NULL;
