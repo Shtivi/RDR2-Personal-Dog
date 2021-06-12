@@ -37,7 +37,7 @@ typedef int Sphere;
 typedef int ScrHandle;
 typedef int Scaleform;
 typedef int AnimScene;
-typedef int Prompt;
+typedef int UIPrompt;
 typedef int PopZone;
 typedef int Volume;
 typedef int PropSet;

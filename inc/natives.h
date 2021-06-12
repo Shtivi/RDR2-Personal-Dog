@@ -2308,99 +2308,99 @@ namespace HUD
 	static void _0xF1E6979C0B779985(Any p0) { invoke<Void>(0xF1E6979C0B779985, p0); } // 0xF1E6979C0B779985 b1207
 	static Any UI_GET_SCENE_UIOBJECT(Any p0) { return invoke<Any>(0xBE1067CD1C9570F6, p0); } // 0xBE1067CD1C9570F6 b1207
 	static void UI_MOVIEVIEW_SET_RENDER_TARGET(Any p0, Any p1) { invoke<Void>(0x51DE09A2196BD951, p0, p1); } // 0x51DE09A2196BD951 b1207
-	static Prompt _UIPROMPT_CREATE(Hash inputHash, const char* labelName, Any p2, Any p3, Any p4, int p5) { return invoke<Prompt>(0x29FA7910726C3889, inputHash, labelName, p2, p3, p4, p5); } // 0x29FA7910726C3889 b1207
-	static Prompt _UIPROMPT_REGISTER_BEGIN() { return invoke<Prompt>(0x04F97DE45A519419); } // 0x04F97DE45A519419 b1207
-	static void _UIPROMPT_REGISTER_END(Prompt prompt) { invoke<Void>(0xF7AA2696A22AD8B9, prompt); } // 0xF7AA2696A22AD8B9 b1207
-	static void _UIPROMPT_SET_PRIORITY(Prompt prompt, Any p1) { invoke<Void>(0xCA24F528D0D16289, prompt, p1); } // 0xCA24F528D0D16289 b1207
-	static Any _UIPROMPT_SET_CONTROL_ACTION(Prompt prompt, Hash control) { return invoke<Any>(0xB5352B7494A08258, prompt, control); } // 0xB5352B7494A08258 b1207
-	static void _UIPROMPT_SET_ALLOWED_ACTION(Prompt prompt, Any p1) { invoke<Void>(0x565C1CE183CB0EAF, prompt, p1); } // 0x565C1CE183CB0EAF b1207
-	static void _UIPROMPT_SET_STANDARD_MODE(Prompt prompt, Any p1) { invoke<Void>(0xCC6656799977741B, prompt, p1); } // 0xCC6656799977741B b1207
-	static BOOL _UIPROMPT_HAS_STANDARD_MODE_COMPLETED(Prompt prompt, Any p1) { return invoke<BOOL>(0xC92AC953F0A982AE, prompt, p1); } // 0xC92AC953F0A982AE b1207
-	static void _UIPROMPT_SET_PRESSED_TIMED_MODE(Prompt prompt, Any p1) { invoke<Void>(0x1473D3AF51D54276, prompt, p1); } // 0x1473D3AF51D54276 b1207
-	static Any _UIPROMPT_HAS_PRESSED_TIMED_MODE_COMPLETED(Prompt prompt) { return invoke<Any>(0x3CE854D250A88DAF, prompt); } // 0x3CE854D250A88DAF b1207
-	static Any _UIPROMPT_HAS_PRESSED_TIMED_MODE_FAILED(Prompt prompt) { return invoke<Any>(0x1A17B9ECFF617562, prompt); } // 0x1A17B9ECFF617562 b1207
-	static void _UIPROMPT_SET_HOLD_MODE(Prompt prompt, Any p1) { invoke<Void>(0x94073D5CA3F16B7B, prompt, p1); } // 0x94073D5CA3F16B7B b1207
-	static void _UIPROMPT_SET_STANDARDIZED_HOLD_MODE(Prompt prompt, int p1) { invoke<Void>(0x74C7D7B72ED0D3CF, prompt, p1); } // 0x74C7D7B72ED0D3CF b1207
-	static void _UIPROMPT_SET_HOLD_INDEFINITELY_MODE(Prompt prompt) { invoke<Void>(0xEA5CCF4EEB2F82D1, prompt); } // 0xEA5CCF4EEB2F82D1 b1207
-	static void _UIPROMPT_SET_HOLD_AUTO_FILL_MODE(Prompt prompt, Any p1, Any p2) { invoke<Void>(0x3CE932E737C145D6, prompt, p1, p2); } // 0x3CE932E737C145D6 b1207
+	static UIPrompt _UIPROMPT_CREATE(Hash inputHash, const char* labelName, Any p2, Any p3, Any p4, int p5) { return invoke<UIPrompt>(0x29FA7910726C3889, inputHash, labelName, p2, p3, p4, p5); } // 0x29FA7910726C3889 b1207
+	static UIPrompt _UIPROMPT_REGISTER_BEGIN() { return invoke<UIPrompt>(0x04F97DE45A519419); } // 0x04F97DE45A519419 b1207
+	static void _UIPROMPT_REGISTER_END(UIPrompt prompt) { invoke<Void>(0xF7AA2696A22AD8B9, prompt); } // 0xF7AA2696A22AD8B9 b1207
+	static void _UIPROMPT_SET_PRIORITY(UIPrompt prompt, Any p1) { invoke<Void>(0xCA24F528D0D16289, prompt, p1); } // 0xCA24F528D0D16289 b1207
+	static Any _UIPROMPT_SET_CONTROL_ACTION(UIPrompt prompt, Hash control) { return invoke<Any>(0xB5352B7494A08258, prompt, control); } // 0xB5352B7494A08258 b1207
+	static void _UIPROMPT_SET_ALLOWED_ACTION(UIPrompt prompt, Any p1) { invoke<Void>(0x565C1CE183CB0EAF, prompt, p1); } // 0x565C1CE183CB0EAF b1207
+	static void _UIPROMPT_SET_STANDARD_MODE(UIPrompt prompt, Any p1) { invoke<Void>(0xCC6656799977741B, prompt, p1); } // 0xCC6656799977741B b1207
+	static BOOL _UIPROMPT_HAS_STANDARD_MODE_COMPLETED(UIPrompt prompt, Any p1) { return invoke<BOOL>(0xC92AC953F0A982AE, prompt, p1); } // 0xC92AC953F0A982AE b1207
+	static void _UIPROMPT_SET_PRESSED_TIMED_MODE(UIPrompt prompt, Any p1) { invoke<Void>(0x1473D3AF51D54276, prompt, p1); } // 0x1473D3AF51D54276 b1207
+	static Any _UIPROMPT_HAS_PRESSED_TIMED_MODE_COMPLETED(UIPrompt prompt) { return invoke<Any>(0x3CE854D250A88DAF, prompt); } // 0x3CE854D250A88DAF b1207
+	static Any _UIPROMPT_HAS_PRESSED_TIMED_MODE_FAILED(UIPrompt prompt) { return invoke<Any>(0x1A17B9ECFF617562, prompt); } // 0x1A17B9ECFF617562 b1207
+	static void _UIPROMPT_SET_HOLD_MODE(UIPrompt prompt, Any p1) { invoke<Void>(0x94073D5CA3F16B7B, prompt, p1); } // 0x94073D5CA3F16B7B b1207
+	static void _UIPROMPT_SET_STANDARDIZED_HOLD_MODE(UIPrompt prompt, int p1) { invoke<Void>(0x74C7D7B72ED0D3CF, prompt, p1); } // 0x74C7D7B72ED0D3CF b1207
+	static void _UIPROMPT_SET_HOLD_INDEFINITELY_MODE(UIPrompt prompt) { invoke<Void>(0xEA5CCF4EEB2F82D1, prompt); } // 0xEA5CCF4EEB2F82D1 b1207
+	static void _UIPROMPT_SET_HOLD_AUTO_FILL_MODE(UIPrompt prompt, Any p1, Any p2) { invoke<Void>(0x3CE932E737C145D6, prompt, p1, p2); } // 0x3CE932E737C145D6 b1207
 	static void _0xA3F2149AA24F3D8E(Any p0, Any p1, Any p2) { invoke<Void>(0xA3F2149AA24F3D8E, p0, p1, p2); } // 0xA3F2149AA24F3D8E b1207
-	static BOOL _UIPROMPT_HAS_HOLD_AUTO_FILL_MODE(Prompt prompt) { return invoke<BOOL>(0x8010BEBD0D5ED5BC, prompt); } // 0x8010BEBD0D5ED5BC b1207
-	static BOOL _UIPROMPT_HAS_HOLD_MODE(Prompt prompt) { return invoke<BOOL>(0xB60C9F9ED47ABB76, prompt); } // 0xB60C9F9ED47ABB76 b1207
-	static BOOL _UIPROMPT_IS_HOLD_MODE_RUNNING(Prompt prompt) { return invoke<BOOL>(0xC7D70EAEF92EFF48, prompt); } // 0xC7D70EAEF92EFF48 b1207
-	static BOOL _UIPROMPT_HAS_HOLD_MODE_COMPLETED(Prompt prompt) { return invoke<BOOL>(0xE0F65F0640EF0617, prompt); } // 0xE0F65F0640EF0617 b1207
+	static BOOL _UIPROMPT_HAS_HOLD_AUTO_FILL_MODE(UIPrompt prompt) { return invoke<BOOL>(0x8010BEBD0D5ED5BC, prompt); } // 0x8010BEBD0D5ED5BC b1207
+	static BOOL _UIPROMPT_HAS_HOLD_MODE(UIPrompt prompt) { return invoke<BOOL>(0xB60C9F9ED47ABB76, prompt); } // 0xB60C9F9ED47ABB76 b1207
+	static BOOL _UIPROMPT_IS_HOLD_MODE_RUNNING(UIPrompt prompt) { return invoke<BOOL>(0xC7D70EAEF92EFF48, prompt); } // 0xC7D70EAEF92EFF48 b1207
+	static BOOL _UIPROMPT_HAS_HOLD_MODE_COMPLETED(UIPrompt prompt) { return invoke<BOOL>(0xE0F65F0640EF0617, prompt); } // 0xE0F65F0640EF0617 b1207
 	static Any _0x81801291806DBC50(Any p0) { return invoke<Any>(0x81801291806DBC50, p0); } // 0x81801291806DBC50 b1207
-	static void _UIPROMPT_SET_MASH_MODE(Prompt prompt, Any p1) { invoke<Void>(0xDF6423BF071C7F71, prompt, p1); } // 0xDF6423BF071C7F71 b1207
-	static void _UIPROMPT_SET_MASH_INDEFINITELY_MODE(Prompt prompt) { invoke<Void>(0x7B66E89312727274, prompt); } // 0x7B66E89312727274 b1207
-	static void _UIPROMPT_SET_MASH_WITH_RESISTANCE_MODE(Prompt prompt, Any p1, Any p2, Any p3) { invoke<Void>(0xCD1BDFF15EFA79F5, prompt, p1, p2, p3); } // 0xCD1BDFF15EFA79F5 b1207
-	static void _UIPROMPT_SET_MASH_WITH_RESISTANCE_CAN_FAIL_MODE(Prompt prompt, Any p1, Any p2, Any p3) { invoke<Void>(0xDC0CB602DEADBA53, prompt, p1, p2, p3); } // 0xDC0CB602DEADBA53 b1207
-	static void _UIPROMPT_SET_MASH_AUTO_FILL_MODE(Prompt prompt, Any p1, Any p2) { invoke<Void>(0x6C39587D7CC66801, prompt, p1, p2); } // 0x6C39587D7CC66801 b1207
-	static void _UIPROMPT_SET_MASH_MANUAL_MODE(Prompt prompt, Any p1, Any p2, Any p3, Any p4) { invoke<Void>(0x32DF729D8BD3C1C6, prompt, p1, p2, p3, p4); } // 0x32DF729D8BD3C1C6 b1207
-	static void _UIPROMPT_SET_MASH_MANUAL_CAN_FAIL_MODE(Prompt prompt, Any p1, Any p2, Any p3, Any p4) { invoke<Void>(0x179DCF71F705DA20, prompt, p1, p2, p3, p4); } // 0x179DCF71F705DA20 b1207
-	static BOOL _UIPROMPT_HAS_MANUAL_MASH_MODE(Prompt prompt) { return invoke<BOOL>(0xA6C6A4ADB3BAC409, prompt); } // 0xA6C6A4ADB3BAC409 b1207
-	static BOOL _UIPROMPT_HAS_MASH_MODE(Prompt prompt) { return invoke<BOOL>(0xCD072523791DDC1B, prompt); } // 0xCD072523791DDC1B b1207
+	static void _UIPROMPT_SET_MASH_MODE(UIPrompt prompt, Any p1) { invoke<Void>(0xDF6423BF071C7F71, prompt, p1); } // 0xDF6423BF071C7F71 b1207
+	static void _UIPROMPT_SET_MASH_INDEFINITELY_MODE(UIPrompt prompt) { invoke<Void>(0x7B66E89312727274, prompt); } // 0x7B66E89312727274 b1207
+	static void _UIPROMPT_SET_MASH_WITH_RESISTANCE_MODE(UIPrompt prompt, Any p1, Any p2, Any p3) { invoke<Void>(0xCD1BDFF15EFA79F5, prompt, p1, p2, p3); } // 0xCD1BDFF15EFA79F5 b1207
+	static void _UIPROMPT_SET_MASH_WITH_RESISTANCE_CAN_FAIL_MODE(UIPrompt prompt, Any p1, Any p2, Any p3) { invoke<Void>(0xDC0CB602DEADBA53, prompt, p1, p2, p3); } // 0xDC0CB602DEADBA53 b1207
+	static void _UIPROMPT_SET_MASH_AUTO_FILL_MODE(UIPrompt prompt, Any p1, Any p2) { invoke<Void>(0x6C39587D7CC66801, prompt, p1, p2); } // 0x6C39587D7CC66801 b1207
+	static void _UIPROMPT_SET_MASH_MANUAL_MODE(UIPrompt prompt, Any p1, Any p2, Any p3, Any p4) { invoke<Void>(0x32DF729D8BD3C1C6, prompt, p1, p2, p3, p4); } // 0x32DF729D8BD3C1C6 b1207
+	static void _UIPROMPT_SET_MASH_MANUAL_CAN_FAIL_MODE(UIPrompt prompt, Any p1, Any p2, Any p3, Any p4) { invoke<Void>(0x179DCF71F705DA20, prompt, p1, p2, p3, p4); } // 0x179DCF71F705DA20 b1207
+	static BOOL _UIPROMPT_HAS_MANUAL_MASH_MODE(UIPrompt prompt) { return invoke<BOOL>(0xA6C6A4ADB3BAC409, prompt); } // 0xA6C6A4ADB3BAC409 b1207
+	static BOOL _UIPROMPT_HAS_MASH_MODE(UIPrompt prompt) { return invoke<BOOL>(0xCD072523791DDC1B, prompt); } // 0xCD072523791DDC1B b1207
 	static Any _0xB0E8599243B3F568(Any p0) { return invoke<Any>(0xB0E8599243B3F568, p0); } // 0xB0E8599243B3F568 b1207
-	static BOOL _UIPROMPT_HAS_MASH_MODE_COMPLETED(Prompt prompt) { return invoke<BOOL>(0x845CE958416DC473, prompt); } // 0x845CE958416DC473 b1207
-	static BOOL _UIPROMPT_HAS_MASH_MODE_FAILED(Prompt prompt) { return invoke<BOOL>(0x25B18E530CF39D6F, prompt); } // 0x25B18E530CF39D6F b1207
-	static Any _UIPROMPT_GET_MASH_MODE_PROGRESS(Prompt prompt) { return invoke<Any>(0x8A9585293863B8A5, prompt); } // 0x8A9585293863B8A5 b1207
-	static void _UIPROMPT_SET_MASH_MANUAL_MODE_INCREASE_PER_PRESS(Prompt prompt, Any p1) { invoke<Void>(0xA0D1D79C6036A855, prompt, p1); } // 0xA0D1D79C6036A855 b1207
-	static void _UIPROMPT_SET_MASH_MANUAL_MODE_DECAY_SPEED(Prompt prompt, Any p1) { invoke<Void>(0x7D393C247FB9B431, prompt, p1); } // 0x7D393C247FB9B431 b1207
-	static void _UIPROMPT_SET_MASH_MANUAL_MODE_PRESSED_GROWTH_SPEED(Prompt prompt, Any p1) { invoke<Void>(0x56DBB26F98582C29, prompt, p1); } // 0x56DBB26F98582C29 b1207
-	static void _UIPROMPT_SET_ROTATE_MODE(Prompt prompt, Any p1, Any p2) { invoke<Void>(0x7ABE7095FB3D2581, prompt, p1, p2); } // 0x7ABE7095FB3D2581 b1207
-	static void _UIPROMPT_SET_TARGET_MODE(Prompt prompt, Any p1, Any p2, Any p3) { invoke<Void>(0x5F6503D9CD2754EB, prompt, p1, p2, p3); } // 0x5F6503D9CD2754EB b1207
-	static void _UIPROMPT_SET_TARGET_MODE_TARGET(Prompt prompt, Any p1, Any p2) { invoke<Void>(0x5E019C45DD3B6A14, prompt, p1, p2); } // 0x5E019C45DD3B6A14 b1207
-	static void _UIPROMPT_SET_TARGET_MODE_PROGRESS(Prompt prompt, Any p1) { invoke<Void>(0x00123054BEC8A30F, prompt, p1); } // 0x00123054BEC8A30F b1207
-	static void _UIPROMPT_SET_BEAT_MODE(Prompt prompt, Any p1) { invoke<Void>(0xF957A1654C6322FE, prompt, p1); } // 0xF957A1654C6322FE b1207
-	static BOOL _UIPROMPT_WAS_BEAT_MODE_PRESSED_IN_TIME_WINDOW(Prompt prompt) { return invoke<BOOL>(0x1FE4788AB1430C55, prompt); } // 0x1FE4788AB1430C55 b1207
-	static void _UIPROMPT_SET_BEAT_MODE_GRAYED_OUT(Prompt prompt, Any p1) { invoke<Void>(0xB487A4936FBF40AC, prompt, p1); } // 0xB487A4936FBF40AC b1207
-	static void _UIPROMPT_RESTART_MODES(Prompt prompt) { invoke<Void>(0xDC6C55DFA2C24EE5, prompt); } // 0xDC6C55DFA2C24EE5 b1207
-	static void _UIPROMPT_SET_SPINNER_SPEED(Prompt prompt, Any p1) { invoke<Void>(0xAC6586A7FDCD4B68, prompt, p1); } // 0xAC6586A7FDCD4B68 b1207
-	static void _UIPROMPT_SET_SPINNER_POSITION(Prompt prompt, Any p1) { invoke<Void>(0x832CB510DE546282, prompt, p1); } // 0x832CB510DE546282 b1207
-	static void _UIPROMPT_SET_URGENT_PULSING_ENABLED(Prompt prompt, Any p1) { invoke<Void>(0xC5F428EE08FA7F2C, prompt, p1); } // 0xC5F428EE08FA7F2C b1207
-	static BOOL _UIPROMPT_GET_URGENT_PULSING_ENABLED(Prompt prompt) { return invoke<BOOL>(0x1FBA0DABECDDB52B, prompt); } // 0x1FBA0DABECDDB52B b1207
-	static void _UIPROMPT_SET_TAG(Prompt prompt, Any p1) { invoke<Void>(0xDEC85C174751292B, prompt, p1); } // 0xDEC85C174751292B b1207
+	static BOOL _UIPROMPT_HAS_MASH_MODE_COMPLETED(UIPrompt prompt) { return invoke<BOOL>(0x845CE958416DC473, prompt); } // 0x845CE958416DC473 b1207
+	static BOOL _UIPROMPT_HAS_MASH_MODE_FAILED(UIPrompt prompt) { return invoke<BOOL>(0x25B18E530CF39D6F, prompt); } // 0x25B18E530CF39D6F b1207
+	static Any _UIPROMPT_GET_MASH_MODE_PROGRESS(UIPrompt prompt) { return invoke<Any>(0x8A9585293863B8A5, prompt); } // 0x8A9585293863B8A5 b1207
+	static void _UIPROMPT_SET_MASH_MANUAL_MODE_INCREASE_PER_PRESS(UIPrompt prompt, Any p1) { invoke<Void>(0xA0D1D79C6036A855, prompt, p1); } // 0xA0D1D79C6036A855 b1207
+	static void _UIPROMPT_SET_MASH_MANUAL_MODE_DECAY_SPEED(UIPrompt prompt, Any p1) { invoke<Void>(0x7D393C247FB9B431, prompt, p1); } // 0x7D393C247FB9B431 b1207
+	static void _UIPROMPT_SET_MASH_MANUAL_MODE_PRESSED_GROWTH_SPEED(UIPrompt prompt, Any p1) { invoke<Void>(0x56DBB26F98582C29, prompt, p1); } // 0x56DBB26F98582C29 b1207
+	static void _UIPROMPT_SET_ROTATE_MODE(UIPrompt prompt, Any p1, Any p2) { invoke<Void>(0x7ABE7095FB3D2581, prompt, p1, p2); } // 0x7ABE7095FB3D2581 b1207
+	static void _UIPROMPT_SET_TARGET_MODE(UIPrompt prompt, Any p1, Any p2, Any p3) { invoke<Void>(0x5F6503D9CD2754EB, prompt, p1, p2, p3); } // 0x5F6503D9CD2754EB b1207
+	static void _UIPROMPT_SET_TARGET_MODE_TARGET(UIPrompt prompt, Any p1, Any p2) { invoke<Void>(0x5E019C45DD3B6A14, prompt, p1, p2); } // 0x5E019C45DD3B6A14 b1207
+	static void _UIPROMPT_SET_TARGET_MODE_PROGRESS(UIPrompt prompt, Any p1) { invoke<Void>(0x00123054BEC8A30F, prompt, p1); } // 0x00123054BEC8A30F b1207
+	static void _UIPROMPT_SET_BEAT_MODE(UIPrompt prompt, Any p1) { invoke<Void>(0xF957A1654C6322FE, prompt, p1); } // 0xF957A1654C6322FE b1207
+	static BOOL _UIPROMPT_WAS_BEAT_MODE_PRESSED_IN_TIME_WINDOW(UIPrompt prompt) { return invoke<BOOL>(0x1FE4788AB1430C55, prompt); } // 0x1FE4788AB1430C55 b1207
+	static void _UIPROMPT_SET_BEAT_MODE_GRAYED_OUT(UIPrompt prompt, Any p1) { invoke<Void>(0xB487A4936FBF40AC, prompt, p1); } // 0xB487A4936FBF40AC b1207
+	static void _UIPROMPT_RESTART_MODES(UIPrompt prompt) { invoke<Void>(0xDC6C55DFA2C24EE5, prompt); } // 0xDC6C55DFA2C24EE5 b1207
+	static void _UIPROMPT_SET_SPINNER_SPEED(UIPrompt prompt, Any p1) { invoke<Void>(0xAC6586A7FDCD4B68, prompt, p1); } // 0xAC6586A7FDCD4B68 b1207
+	static void _UIPROMPT_SET_SPINNER_POSITION(UIPrompt prompt, Any p1) { invoke<Void>(0x832CB510DE546282, prompt, p1); } // 0x832CB510DE546282 b1207
+	static void _UIPROMPT_SET_URGENT_PULSING_ENABLED(UIPrompt prompt, Any p1) { invoke<Void>(0xC5F428EE08FA7F2C, prompt, p1); } // 0xC5F428EE08FA7F2C b1207
+	static BOOL _UIPROMPT_GET_URGENT_PULSING_ENABLED(UIPrompt prompt) { return invoke<BOOL>(0x1FBA0DABECDDB52B, prompt); } // 0x1FBA0DABECDDB52B b1207
+	static void _UIPROMPT_SET_TAG(UIPrompt prompt, Any p1) { invoke<Void>(0xDEC85C174751292B, prompt, p1); } // 0xDEC85C174751292B b1207
 	static int _UIPROMPT_GET_GROUP_ID_FOR_TARGET_ENTITY(Entity entity) { return invoke<int>(0xB796970BD125FCE8, entity); } // 0xB796970BD125FCE8 b1207
 	static int _UIPROMPT_GET_GROUP_ID_FOR_SCENARIO_POINT(Any p0, int p1) { return invoke<int>(0xCB73D7521E7103F0, p0, p1); } // 0xCB73D7521E7103F0 b1207
-	static void _UIPROMPT_SET_GROUP(Prompt prompt, Any p1, Any p2) { invoke<Void>(0x2F11D3A254169EA4, prompt, p1, p2); } // 0x2F11D3A254169EA4 b1207
-	static void _UIPROMPT_REMOVE_GROUP(Prompt prompt, Any p1) { invoke<Void>(0x4E52C800A28F7BE8, prompt, p1); } // 0x4E52C800A28F7BE8 b1207
-	static Any _UIPROMPT_SET_ACTIVE_GROUP_THIS_FRAME(Hash hash, Any p1, Any p2, Any p3, Any p4, Prompt prompt) { return invoke<Any>(0xC65A45D4453C2627, hash, p1, p2, p3, p4, prompt); } // 0xC65A45D4453C2627 b1207
+	static void _UIPROMPT_SET_GROUP(UIPrompt prompt, Any p1, Any p2) { invoke<Void>(0x2F11D3A254169EA4, prompt, p1, p2); } // 0x2F11D3A254169EA4 b1207
+	static void _UIPROMPT_REMOVE_GROUP(UIPrompt prompt, Any p1) { invoke<Void>(0x4E52C800A28F7BE8, prompt, p1); } // 0x4E52C800A28F7BE8 b1207
+	static Any _UIPROMPT_SET_ACTIVE_GROUP_THIS_FRAME(Hash hash, Any p1, Any p2, Any p3, Any p4, UIPrompt prompt) { return invoke<Any>(0xC65A45D4453C2627, hash, p1, p2, p3, p4, prompt); } // 0xC65A45D4453C2627 b1207
 	static int _UIPROMPT_GET_GROUP_ACTIVE_PAGE(Hash hash) { return invoke<int>(0xC1FCC36C3F7286C8, hash); } // 0xC1FCC36C3F7286C8 b1207
 	static Any _UIPROMPT_SET_AMBIENT_GROUP_THIS_FRAME(Entity entity, Any p1, Any p2, Any p3, Any p4, Any p5, Any p6) { return invoke<Any>(0x315C81D760609108, entity, p1, p2, p3, p4, p5, p6); } // 0x315C81D760609108 b1207
 	static Any _0x8B55B324A9123F6B(Any p0, Any p1, Any p2, Any p3, Any p4, Any p5) { return invoke<Any>(0x8B55B324A9123F6B, p0, p1, p2, p3, p4, p5); } // 0x8B55B324A9123F6B b1232
 	static BOOL _UIPROMPT_DOES_AMBIENT_GROUP_EXIST(Hash hash) { return invoke<BOOL>(0xEB550B927B34A1BB, hash); } // 0xEB550B927B34A1BB b1207
-	static void _UIPROMPT_ADD_GROUP_LINK(Any p0, Prompt prompt, Any p2) { invoke<Void>(0x684C96CC7C66E8EF, p0, prompt, p2); } // 0x684C96CC7C66E8EF b1207
-	static void _UIPROMPT_ADD_GROUP_RETURN_LINK(Any p0, Prompt prompt) { invoke<Void>(0x837972ED28159536, p0, prompt); } // 0x837972ED28159536 b1207
-	static void _UIPROMPT_SET_TRANSPORT_MODE(Prompt prompt, Any p1) { invoke<Void>(0x876E4A35C73A6655, prompt, p1); } // 0x876E4A35C73A6655 b1207
+	static void _UIPROMPT_ADD_GROUP_LINK(Any p0, UIPrompt prompt, Any p2) { invoke<Void>(0x684C96CC7C66E8EF, p0, prompt, p2); } // 0x684C96CC7C66E8EF b1207
+	static void _UIPROMPT_ADD_GROUP_RETURN_LINK(Any p0, UIPrompt prompt) { invoke<Void>(0x837972ED28159536, p0, prompt); } // 0x837972ED28159536 b1207
+	static void _UIPROMPT_SET_TRANSPORT_MODE(UIPrompt prompt, Any p1) { invoke<Void>(0x876E4A35C73A6655, prompt, p1); } // 0x876E4A35C73A6655 b1207
 	static void _UIPROMPT_DISABLE_PROMPTS_THIS_FRAME() { invoke<Void>(0xF1622CE88A1946FB); } // 0xF1622CE88A1946FB b1207
-	static void _UIPROMPT_DELETE(Prompt prompt) { invoke<Void>(0x00EDE88D4D13CF59, prompt); } // 0x00EDE88D4D13CF59 b1207
-	static BOOL _UIPROMPT_IS_VALID(Prompt prompt) { return invoke<BOOL>(0x347469FBDD1589A9, prompt); } // 0x347469FBDD1589A9 b1207
-	static BOOL _UIPROMPT_IS_ACTIVE(Prompt prompt) { return invoke<BOOL>(0x546E342E01DE71CF, prompt); } // 0x546E342E01DE71CF b1207
-	static void _UIPROMPT_SET_VISIBLE(Prompt prompt, BOOL toggle) { invoke<Void>(0x71215ACCFDE075EE, prompt, toggle); } // 0x71215ACCFDE075EE b1207
-	static void _UIPROMPT_SET_ENABLED(Prompt prompt, BOOL toggle) { invoke<Void>(0x8A0FB4D03A630D21, prompt, toggle); } // 0x8A0FB4D03A630D21 b1207
-	static void _UIPROMPT_SET_TEXT(Prompt prompt, const char* text) { invoke<Void>(0x5DD02A8318420DD7, prompt, text); } // 0x5DD02A8318420DD7 b1207
-	static void _UIPROMPT_SET_ATTRIBUTE(Prompt prompt, Any p1, Any p2) { invoke<Void>(0x560E76D5E2E1803F, prompt, p1, p2); } // 0x560E76D5E2E1803F b1207
+	static void _UIPROMPT_DELETE(UIPrompt prompt) { invoke<Void>(0x00EDE88D4D13CF59, prompt); } // 0x00EDE88D4D13CF59 b1207
+	static BOOL _UIPROMPT_IS_VALID(UIPrompt prompt) { return invoke<BOOL>(0x347469FBDD1589A9, prompt); } // 0x347469FBDD1589A9 b1207
+	static BOOL _UIPROMPT_IS_ACTIVE(UIPrompt prompt) { return invoke<BOOL>(0x546E342E01DE71CF, prompt); } // 0x546E342E01DE71CF b1207
+	static void _UIPROMPT_SET_VISIBLE(UIPrompt prompt, BOOL toggle) { invoke<Void>(0x71215ACCFDE075EE, prompt, toggle); } // 0x71215ACCFDE075EE b1207
+	static void _UIPROMPT_SET_ENABLED(UIPrompt prompt, BOOL toggle) { invoke<Void>(0x8A0FB4D03A630D21, prompt, toggle); } // 0x8A0FB4D03A630D21 b1207
+	static void _UIPROMPT_SET_TEXT(UIPrompt prompt, const char* text) { invoke<Void>(0x5DD02A8318420DD7, prompt, text); } // 0x5DD02A8318420DD7 b1207
+	static void _UIPROMPT_SET_ATTRIBUTE(UIPrompt prompt, Any p1, Any p2) { invoke<Void>(0x560E76D5E2E1803F, prompt, p1, p2); } // 0x560E76D5E2E1803F b1207
 	static void _0xF4A5C4509BF923B1(Any p0, Any p1) { invoke<Void>(0xF4A5C4509BF923B1, p0, p1); } // 0xF4A5C4509BF923B1 b1207
 	static void _0x53CE46C01A089DA1(Any p0, Any p1) { invoke<Void>(0x53CE46C01A089DA1, p0, p1); } // 0x53CE46C01A089DA1 b1207
 	static void _0xA520C7B05FA4EB2A(Any p0, Any p1) { invoke<Void>(0xA520C7B05FA4EB2A, p0, p1); } // 0xA520C7B05FA4EB2A b1207
-	static void _0x4D107406667423BE(Prompt prompt, ScrHandle p1) { invoke<Void>(0x4D107406667423BE, prompt, p1); } // 0x4D107406667423BE b1207
-	static void _UIPROMPT_CONTEXT_SET_POINT(Prompt prompt, float x, float y, float z) { invoke<Void>(0xAE84C5EE2C384FB3, prompt, x, y, z); } // 0xAE84C5EE2C384FB3 b1207
-	static void _UIPROMPT_CONTEXT_SET_SIZE(Prompt prompt, float size) { invoke<Void>(0x0C718001B77CA468, prompt, size); } // 0x0C718001B77CA468 b1207
-	static BOOL _UIPROMPT_IS_PRESSED(Prompt prompt) { return invoke<BOOL>(0x21E60E230086697F, prompt); } // 0x21E60E230086697F b1207
-	static BOOL _UIPROMPT_IS_JUST_PRESSED(Prompt prompt) { return invoke<BOOL>(0x2787CC611D3FACC5, prompt); } // 0x2787CC611D3FACC5 b1207
-	static BOOL _UIPROMPT_IS_JUST_RELEASED(Prompt prompt) { return invoke<BOOL>(0x635CC82FA297A827, prompt); } // 0x635CC82FA297A827 b1207
-	static BOOL _UIPROMPT_IS_RELEASED(Prompt prompt) { return invoke<BOOL>(0xAFC887BA7A7756D6, prompt); } // 0xAFC887BA7A7756D6 b1207
+	static void _0x4D107406667423BE(UIPrompt prompt, ScrHandle p1) { invoke<Void>(0x4D107406667423BE, prompt, p1); } // 0x4D107406667423BE b1207
+	static void _UIPROMPT_CONTEXT_SET_POINT(UIPrompt prompt, float x, float y, float z) { invoke<Void>(0xAE84C5EE2C384FB3, prompt, x, y, z); } // 0xAE84C5EE2C384FB3 b1207
+	static void _UIPROMPT_CONTEXT_SET_SIZE(UIPrompt prompt, float size) { invoke<Void>(0x0C718001B77CA468, prompt, size); } // 0x0C718001B77CA468 b1207
+	static BOOL _UIPROMPT_IS_PRESSED(UIPrompt prompt) { return invoke<BOOL>(0x21E60E230086697F, prompt); } // 0x21E60E230086697F b1207
+	static BOOL _UIPROMPT_IS_JUST_PRESSED(UIPrompt prompt) { return invoke<BOOL>(0x2787CC611D3FACC5, prompt); } // 0x2787CC611D3FACC5 b1207
+	static BOOL _UIPROMPT_IS_JUST_RELEASED(UIPrompt prompt) { return invoke<BOOL>(0x635CC82FA297A827, prompt); } // 0x635CC82FA297A827 b1207
+	static BOOL _UIPROMPT_IS_RELEASED(UIPrompt prompt) { return invoke<BOOL>(0xAFC887BA7A7756D6, prompt); } // 0xAFC887BA7A7756D6 b1207
 	static void _UIPROMPT_ENABLE_PROMPT_TYPE_THIS_FRAME(Any p0) { invoke<Void>(0x06565032897BA861, p0); } // 0x06565032897BA861 b1207
 	static void _UIPROMPT_DISABLE_PROMPT_TYPE_THIS_FRAME(Any p0) { invoke<Void>(0xFC094EF26DD153FA, p0); } // 0xFC094EF26DD153FA b1207
 	static void _UIPROMPT_FILTER_CLEAR() { invoke<Void>(0x6A2F820452017EA2); } // 0x6A2F820452017EA2 b1207
 	static void _UIPROMPT_SET_FAVOURED_PED_FOR_CONFLICT_RESOLUTION(Ped ped) { invoke<Void>(0x530A428705BE5DEF, ped); } // 0x530A428705BE5DEF b1207
 	static void _UIPROMPT_CLEAR_FAVOURED_PED_FOR_CONFLICT_RESOLUTION() { invoke<Void>(0x51259AE5C72D4A1B); } // 0x51259AE5C72D4A1B b1207
-	static BOOL _UIPROMPT_IS_ENABLED(Prompt prompt) { return invoke<BOOL>(0x0D00EDDFB58B7F28, prompt); } // 0x0D00EDDFB58B7F28 b1207
+	static BOOL _UIPROMPT_IS_ENABLED(UIPrompt prompt) { return invoke<BOOL>(0x0D00EDDFB58B7F28, prompt); } // 0x0D00EDDFB58B7F28 b1207
 	static BOOL _UIPROMPT_IS_CONTROL_ACTION_ACTIVE(Hash control) { return invoke<BOOL>(0x1BE19185B8AFE299, control); } // 0x1BE19185B8AFE299 b1207
 	static Any _0xD6BD313CFA41E57A(Any p0) { return invoke<Any>(0xD6BD313CFA41E57A, p0); } // 0xD6BD313CFA41E57A b1207
 	// This returns an id that can be used with 0x6095358C4142932A.
 	static int _UIPROMPT_SET_REGISTER_HORIZONTAL_ORIENTATION() { return invoke<int>(0xD9459157EB22C895); } // 0xD9459157EB22C895 b1207
 	// id is the return value from 0xD9459157EB22C895.
 	static void _UIPROMPT_CLEAR_HORIZONTAL_ORIENTATION(int id) { invoke<Void>(0x6095358C4142932A, id); } // 0x6095358C4142932A b1207
-	static void _UIPROMPT_SET_ORDERING_AS_INPUT_TYPE(Prompt prompt, Any p1) { invoke<Void>(0x2F385ECC5200938D, prompt, p1); } // 0x2F385ECC5200938D b1207
+	static void _UIPROMPT_SET_ORDERING_AS_INPUT_TYPE(UIPrompt prompt, Any p1) { invoke<Void>(0x2F385ECC5200938D, prompt, p1); } // 0x2F385ECC5200938D b1207
 	static Any _0x066725A9D52B3641() { return invoke<Any>(0x066725A9D52B3641); } // 0x066725A9D52B3641 b1232
 	static void _0x958278B97C4AFFD8(Any p0, Any p1) { invoke<Void>(0x958278B97C4AFFD8, p0, p1); } // 0x958278B97C4AFFD8 b1232
 	static int _CREATE_MP_GAMER_TAG(Player player, const char* username, BOOL pointedClanTag, BOOL isRockstarClan, const char* clanTag, Any p5) { return invoke<int>(0xD877AF112AD2B41B, player, username, pointedClanTag, isRockstarClan, clanTag, p5); } // 0xD877AF112AD2B41B b1207
@@ -3355,7 +3355,7 @@ namespace MISC
 	static Any _0x33982467B1E349EF(Any p0, Any p1, Any p2, Any p3, Any p4, Any p5, Any p6) { return invoke<Any>(0x33982467B1E349EF, p0, p1, p2, p3, p4, p5, p6); } // 0x33982467B1E349EF b1207
 	static Any _0x8314FC2013ECE2DA(Any p0, Any p1, Any p2) { return invoke<Any>(0x8314FC2013ECE2DA, p0, p1, p2); } // 0x8314FC2013ECE2DA b1207
 	static void _0x4D5C9CC7E7E23E09() { invoke<Void>(0x4D5C9CC7E7E23E09); } // 0x4D5C9CC7E7E23E09 b1207
-	static BOOL REGISTER_INTERACTION_LOCKON_PROMPT(Entity entity, const char* p1, float p2, float p3, int p4, float p5, float p6, Prompt prompt, BOOL p8, int p9) { return invoke<BOOL>(0x870708A6E147A9AD, entity, p1, p2, p3, p4, p5, p6, prompt, p8, p9); } // 0x870708A6E147A9AD b1207
+	static BOOL REGISTER_INTERACTION_LOCKON_PROMPT(Entity entity, const char* p1, float p2, float p3, int p4, float p5, float p6, UIPrompt prompt, BOOL p8, int p9) { return invoke<BOOL>(0x870708A6E147A9AD, entity, p1, p2, p3, p4, p5, p6, prompt, p8, p9); } // 0x870708A6E147A9AD b1207
 	static Any _0xE98D55C5983F2509(Any p0) { return invoke<Any>(0xE98D55C5983F2509, p0); } // 0xE98D55C5983F2509 b1207
 	static void _0xFC6ECB9170145ECE() { invoke<Void>(0xFC6ECB9170145ECE); } // 0xFC6ECB9170145ECE b1207
 	static Any _0x35165C658077CD0B() { return invoke<Any>(0x35165C658077CD0B); } // 0x35165C658077CD0B b1207

@@ -8,7 +8,7 @@ enum PromptMode
 	Mash
 };
 
-class Prompts
+class Prompt
 {
 	public:
 		int handle;
@@ -23,8 +23,8 @@ class Prompts
 		bool semiHoldShouldReturn;
 
 	public: 
-		Prompts(const char* text, Hash control);
-		Prompts(const char* text, Hash control, PromptMode mode);
+		Prompt(const char* text, Hash control);
+		Prompt(const char* text, Hash control, PromptMode mode);
 
 		Entity getTargetEntity();
 		bool getIsEnabled();

@@ -7,15 +7,15 @@ class RootState
 public:
 	Ped candidateDog = NULL;
 	Ped companionDog = NULL;
-	Prompts* accompanyPrompt = NULL;
-	Prompts* stayPrompt = NULL;
-	Prompts* feedPrompt = NULL;
-	Prompts* praisePrompt = NULL;
-	Prompts* dismissPrompt = NULL;
-	Prompts* followPrompt = NULL;
-	Prompts* renamePrompt = NULL;
-	Prompts* attackPrompt = NULL;
-	Prompts* retrieveDogPrompt = NULL;
+	Prompt* accompanyPrompt = NULL;
+	Prompt* stayPrompt = NULL;
+	Prompt* feedPrompt = NULL;
+	Prompt* praisePrompt = NULL;
+	Prompt* dismissPrompt = NULL;
+	Prompt* followPrompt = NULL;
+	Prompt* renamePrompt = NULL;
+	Prompt* attackPrompt = NULL;
+	Prompt* retrieveDogPrompt = NULL;
 	ComapnionCoresUI* coresUI = NULL;
 	DogCompanionInterface* companionApi = NULL;
 	AsyncCompanionTask* currentTask;

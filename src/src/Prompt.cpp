@@ -1,11 +1,11 @@
 #include "Main.h"
 
-Prompts::Prompts(const char* text, Hash control)
-	: Prompts(text, control, Standard)
+Prompt::Prompt(const char* text, Hash control)
+	: Prompt(text, control, Standard)
 {
 }
 
-Prompts::Prompts(const char* text, Hash control, PromptMode mode)
+Prompt::Prompt(const char* text, Hash control, PromptMode mode)
 {
 	handle = HUD::_UIPROMPT_REGISTER_BEGIN();
 	setControl(control);
@@ -20,35 +20,35 @@ Prompts::Prompts(const char* text, Hash control, PromptMode mode)
 	isVisible = false;
 }
 
-Entity Prompts::getTargetEntity()
+Entity Prompt::getTargetEntity()
 {
 	return this->targetEntity;
 }
 
-bool Prompts::getIsEnabled()
+bool Prompt::getIsEnabled()
 {
 	return isEnabled;
 }
 
-void Prompts::setText(const char* text)
+void Prompt::setText(const char* text)
 {
 	this->text = text;
 	const char* textLabel = MISC::VAR_STRING(10, "LITERAL_STRING", text);
 	HUD::_UIPROMPT_SET_TEXT(this->handle, textLabel);
 }
 
-void Prompts::setControl(Hash control)
+void Prompt::setControl(Hash control)
 {
 	this->control = control;
 	HUD::_UIPROMPT_SET_CONTROL_ACTION(this->handle, control);
 }
 
-Hash Prompts::getControl()
+Hash Prompt::getControl()
 {
 	return control;
 }
 
-void Prompts::setTargetEntity(Entity target)
+void Prompt::setTargetEntity(Entity target)
 {
 	this->targetEntity = target;
 
@@ -65,27 +65,27 @@ void Prompts::setTargetEntity(Entity target)
 	}
 }
 
-void Prompts::setGroup(int group)
+void Prompt::setGroup(int group)
 {
 	HUD::_UIPROMPT_SET_GROUP(this->handle, group, 0);
 }
 
-void Prompts::attachToCampfire()
+void Prompt::attachToCampfire()
 {
 	setGroup(1754796591); // Camp fire group
 }
 
-void Prompts::attachToRestingScenario()
+void Prompt::attachToRestingScenario()
 {
 	setGroup(342152817); // Resting scenario group
 }
 
-void Prompts::setPriority(int priority) 
+void Prompt::setPriority(int priority) 
 {
 	HUD::_UIPROMPT_SET_PRIORITY(handle, priority);
 }
 
-void Prompts::setMode(PromptMode mode)
+void Prompt::setMode(PromptMode mode)
 {
 	this->mode = mode;
 
@@ -107,7 +107,7 @@ void Prompts::setMode(PromptMode mode)
 	}
 }
 
-bool Prompts::isActivatedByPlayer()
+bool Prompt::isActivatedByPlayer()
 {
 	if (!this->isEnabled || !this->isVisible)
 	{
@@ -140,34 +140,34 @@ bool Prompts::isActivatedByPlayer()
 	}
 }
 
-bool Prompts::isControlPressed() {
+bool Prompt::isControlPressed() {
 	return PAD::IS_DISABLED_CONTROL_PRESSED(0, control);
 }
 
-void Prompts::setIsEnabled(bool isEnabled)
+void Prompt::setIsEnabled(bool isEnabled)
 {
 	this->isEnabled = isEnabled;
 	update();
 }
 
-void Prompts::show()
+void Prompt::show()
 {
 	isVisible = true;
 	update();
 }
 
-void Prompts::hide()
+void Prompt::hide()
 {
 	isVisible = false;
 	update();
 }
 
-void Prompts::remove()
+void Prompt::remove()
 {
 	HUD::_UIPROMPT_DELETE(handle);
 }
 
-void Prompts::update()
+void Prompt::update()
 {
 	if (isVisible)
 	{
@@ -181,32 +181,32 @@ void Prompts::update()
 	}
 }
 
-float Prompts::getMashModeProgress()
+float Prompt::getMashModeProgress()
 {
 	return HUD::_UIPROMPT_GET_MASH_MODE_PROGRESS(handle);
 }
 
-void Prompts::setMashModeIncreasePerPress(float rate)
+void Prompt::setMashModeIncreasePerPress(float rate)
 {
 	HUD::_UIPROMPT_SET_MASH_MANUAL_MODE_INCREASE_PER_PRESS(handle, rate);
 }
 
-void Prompts::setMashModeGrowthSpeed(float speed)
+void Prompt::setMashModeGrowthSpeed(float speed)
 {
 	HUD::_UIPROMPT_SET_MASH_MANUAL_MODE_PRESSED_GROWTH_SPEED(handle, speed);
 }
 
-void Prompts::setMashModeDecaySpeed(float speed)
+void Prompt::setMashModeDecaySpeed(float speed)
 {
 	HUD::_UIPROMPT_SET_MASH_MANUAL_MODE_DECAY_SPEED(handle, speed);
 }
 
-void Prompts::setUrgentPulsating(bool toggle)
+void Prompt::setUrgentPulsating(bool toggle)
 {
 	HUD::_UIPROMPT_SET_URGENT_PULSING_ENABLED(handle, toggle);
 }
 
-bool Prompts::isUrgentPulsating()
+bool Prompt::isUrgentPulsating()
 {
 	return HUD::_UIPROMPT_GET_URGENT_PULSING_ENABLED(handle);
 }

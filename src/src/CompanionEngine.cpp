@@ -1,53 +1,53 @@
 #include "Main.h"
 
-Prompts* createAccompanyPrompt()
+Prompt* createAccompanyPrompt()
 {
-	return new Prompts(DataFiles::Lang->get("interaction.accompany.promptLabel"), MISC::GET_HASH_KEY("INPUT_WHISTLE"));
+	return new Prompt(DataFiles::Lang->get("interaction.accompany.promptLabel"), MISC::GET_HASH_KEY("INPUT_WHISTLE"));
 }
 
-Prompts* createStayPrompt()
+Prompt* createStayPrompt()
 {
-	return new Prompts(DataFiles::Lang->get("interaction.stay.promptLabel"), MISC::GET_HASH_KEY("INPUT_CONTEXT_X"));
+	return new Prompt(DataFiles::Lang->get("interaction.stay.promptLabel"), MISC::GET_HASH_KEY("INPUT_CONTEXT_X"));
 }
 
-Prompts* createFollowPrompt()
+Prompt* createFollowPrompt()
 {
-	return new Prompts(DataFiles::Lang->get("interaction.follow.promptLabel"), MISC::GET_HASH_KEY("INPUT_CONTEXT_X"));
+	return new Prompt(DataFiles::Lang->get("interaction.follow.promptLabel"), MISC::GET_HASH_KEY("INPUT_CONTEXT_X"));
 }
 
-Prompts* createFeedPrompt()
+Prompt* createFeedPrompt()
 {
-	Prompts* prompt = new Prompts(DataFiles::Lang->get("interaction.feed.promptLabel"), MISC::GET_HASH_KEY("INPUT_INTERACT_OPTION1"));
+	Prompt* prompt = new Prompt(DataFiles::Lang->get("interaction.feed.promptLabel"), MISC::GET_HASH_KEY("INPUT_INTERACT_OPTION1"));
 
 	return prompt;
 }
 
-Prompts* createPraisePrompt()
+Prompt* createPraisePrompt()
 {
-	return new Prompts(DataFiles::Lang->get("interaction.praise.promptLabel"), MISC::GET_HASH_KEY("INPUT_INTERACT_OPTION1"));
+	return new Prompt(DataFiles::Lang->get("interaction.praise.promptLabel"), MISC::GET_HASH_KEY("INPUT_INTERACT_OPTION1"));
 }
 
-Prompts* createDismissPrompt()
+Prompt* createDismissPrompt()
 {
-	return new Prompts(DataFiles::Lang->get("interaction.dismiss.promptLabel"), MISC::GET_HASH_KEY("INPUT_INTERACT_OPTION2"), PromptMode::SemiHold);
+	return new Prompt(DataFiles::Lang->get("interaction.dismiss.promptLabel"), MISC::GET_HASH_KEY("INPUT_INTERACT_OPTION2"), PromptMode::SemiHold);
 }
 
-Prompts* createRenamePrompt()
+Prompt* createRenamePrompt()
 {
-	return new Prompts(DataFiles::Lang->get("interaction.rename.promptLabel"), MISC::GET_HASH_KEY("INPUT_LOOK_BEHIND"), PromptMode::SemiHold);
+	return new Prompt(DataFiles::Lang->get("interaction.rename.promptLabel"), MISC::GET_HASH_KEY("INPUT_LOOK_BEHIND"), PromptMode::SemiHold);
 }
 
-Prompts* createAttackPrompt(const char* dogName)
+Prompt* createAttackPrompt(const char* dogName)
 {
-	return new Prompts(
+	return new Prompt(
 		string(DataFiles::Lang->get("interaction.attack.promptLabel")).append(" ").append(dogName).c_str(), 
 		MISC::GET_HASH_KEY((char*)ScriptSettings::get("AttackPromptControlName").c_str()), 
 		PromptMode::SemiHold);
 }
 
-Prompts* createRetrieveDogPrompt(const char* dogName)
+Prompt* createRetrieveDogPrompt(const char* dogName)
 {
-	return new Prompts(
+	return new Prompt(
 		string(DataFiles::Lang->get("interaction.retrieve_dog.promptLabel")).append(" ").append(dogName).c_str(),
 		MISC::GET_HASH_KEY("INPUT_LOOK_BEHIND"),
 		PromptMode::SemiHold);
