@@ -32,7 +32,8 @@ bool Initialize()
 		{"AllowAttackPrompt", "1"},
 		{"AttackPromptAnimalsOnly", "0"},
 		{"IgnorePlayerCombatWhenSittingDown", "1"},
-		{"AllowEnteringInteriors", "0"}
+		{"AllowEnteringInteriors", "0"},
+		{"InvincibleDog", "0"}
 	});
 
 	if (!DataFiles::load())
@@ -102,7 +103,13 @@ void main()
 				if (PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &e) /*&& distanceBetweenEntities(player, e) < 20*/) {
 					if (IsKeyJustUp(VK_KEY_Z)) 
 					{
+						PED::RESURRECT_PED(e);
+						PED::REVIVE_INJURED_PED(e);
+						showSubtitle("revive");
+
 					}
+					debug(ENTITY::GET_ENTITY_HEALTH(e));
+
 				}
 				else
 				{
@@ -116,6 +123,7 @@ void main()
 					if (IsKeyJustUp(VK_KEY_Z)) 
 					{
 					}
+					debug(PED::_GET_PED_REMAINING_REVIVAL_TIME(targetEntity, 1));
 				}
 				else
 				{
@@ -137,12 +145,21 @@ void main()
 
 			if (IsKeyJustUp(VK_F1))
 			{
-				TASK::CLEAR_PED_TASKS(player, 1, 1);
+				//TASK::CLEAR_PED_TASKS(player, 1, 1);
+				Propset::spawn(playerPos() + getForwardVector(player) * 15, "pg_re_armsdeal01x");
 			}
 
 
 			if (IsKeyJustUp(VK_KEY_Z))
 			{
+				Vehicle veh = createVehicle(MISC::GET_HASH_KEY("coach2"), playerPos() + getForwardVector(player) * 10);
+				//invoke<Void>(0xC0F0417A90402742, veh, MISC::GET_HASH_KEY("pg_re_coachrobbery01x"));
+				//VEHICLE::_0xF489F94BFEE12BB0(veh, -1027511593); // Adds $100 loot
+				//VEHICLE::_0xF489F94BFEE12BB0(veh, -1732002606); // Adds valuable loots (naval compass, coin stacks, earing, ring)
+				VEHICLE::_0xF489F94BFEE12BB0(veh, 1767696941); // Adds valuable loots (naval compass, coin stacks, earing, ring)
+
+				//setVehicleCargo(veh, (VehicleCargoHash));
+				//PROPSET::_ADD_LIGHT_PROP_SET_TO_VEHICLE(veh, );
 			}
 
 
@@ -150,20 +167,21 @@ void main()
 			{
 
 				Ped ped = createPed("a_c_doghusky_01", playerPos() + getForwardVector(player) * 5);
-				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&ped);
+
+				ENTITY::SET_ENTITY_PROOFS(ped, 8 + 16, 0);
+
+				//WAIT(1000);
+				//TASK::_TASK_ANIMAL_BLEED_OUT(ped, 0, 0, WeaponHash::WeaponBow, 0, 0);
+				//WAIT(5000);
+				//PED::SET_PAUSE_PED_WRITHE_BLEEDOUT(ped, true);
 			}
 
 			if (IsKeyJustUp(VK_KEY_K))
 			{
-				Ped ped = createPed("a_m_m_bivroughtravellers_01", playerPos() + getForwardVector(player) * 12);
-				PED::_SET_PED_INCAPACITATION_MODIFIERS(ped, 1, 1, 10000, 75);
-				PED::SET_PED_CONFIG_FLAG(ped, 6, 1);
-				DECORATOR::DECOR_SET_INT(ped, "honor_override", 0);
-				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&ped);
 			}
 		}
 
-		if (false && IsKeyJustUp(VK_F2))
+		if (true && IsKeyJustUp(VK_F2))
 		{
 			setDebugMode(!isDebugMode());
 		}

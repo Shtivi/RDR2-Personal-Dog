@@ -576,6 +576,13 @@ void CompanionEngine::accompanyDog(Ped dog)
 	ENTITY::SET_ENTITY_HEALTH(dog, ENTITY::GET_ENTITY_MAX_HEALTH(dog, 0), 0);
 	DECORATOR::DECOR_SET_INT(state->companionDog, "SH_CMP_health_core", DataFiles::Dog->getInt("health_core"));
 
+	ENTITY::SET_ENTITY_PROOFS(dog, 8, 0);
+
+	if (ScriptSettings::getBool("InvincibleDog"))
+	{
+		ENTITY::SET_ENTITY_INVINCIBLE(dog, 1);
+	}
+
 	Blip dogBlip = createBlip(dog, 0x19365607);
 	state->companionBlip = dogBlip;
 	setBlipLabel(dogBlip, DataFiles::Lang->get("companion.defaultBlipName"));
@@ -753,6 +760,12 @@ void CompanionEngine::dismissCompanion()
 void CompanionEngine::clearCompanion()
 {
 	DECORATOR::DECOR_SET_INT(state->companionDog, "SH_CMP_companion", 0);
+
+	if (ScriptSettings::getBool("InvincibleDog"))
+	{
+		ENTITY::SET_ENTITY_INVINCIBLE(state->companionDog, 0);
+	}
+
 	state->companionDog = NULL;
 	deleteBlipSafe(&state->companionBlip);
 	DataFiles::Dog->set("model", "");
