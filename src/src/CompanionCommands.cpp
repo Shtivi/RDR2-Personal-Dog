@@ -60,3 +60,8 @@ void CompanionCommands::commandAttack(RootState* state, Ped target)
 	}
 	playAmbientSpeech(player, (char*)speech);
 }
+
+void CompanionCommands::commandTrack(RootState* state, Ped target)
+{
+	state->currentTask = state->companionApi->track(target);
+}

@@ -162,7 +162,6 @@ void main()
 				//PROPSET::_ADD_LIGHT_PROP_SET_TO_VEHICLE(veh, );
 			}
 
-
 			if (IsKeyJustUp(VK_F3))
 			{
 
@@ -181,7 +180,7 @@ void main()
 			}
 		}
 
-		if (true && IsKeyJustUp(VK_F2))
+		if (false && IsKeyJustUp(VK_F2))
 		{
 			setDebugMode(!isDebugMode());
 		}

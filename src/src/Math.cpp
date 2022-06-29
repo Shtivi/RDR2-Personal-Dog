@@ -1,5 +1,11 @@
 #include "Main.h"
 
+Hash joaat(const char* string)
+{
+	return MISC::GET_HASH_KEY(string);
+}
+
+
 //Converts Radians to Degrees
 float degToRad(float degs)
 {

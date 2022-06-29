@@ -53,6 +53,14 @@ Prompt* createRetrieveDogPrompt(const char* dogName)
 		PromptMode::SemiHold);
 }
 
+Prompt* createTrackPrompt()
+{
+	return new Prompt(
+		DataFiles::Lang->get("interaction.track.promptLabel"),
+		MISC::GET_HASH_KEY("INPUT_INTERACT_OPTION2"),
+		PromptMode::SemiHold);
+}
+
 CompanionEngine::CompanionEngine()
 {
 	this->state = new RootState();
@@ -137,7 +145,7 @@ void CompanionEngine::update()
 			tutorial("bond_1");
 		}
 
-		return;
+return;
 	}
 
 	if (!ENTITY::DOES_ENTITY_EXIST(state->companionDog))
@@ -153,8 +161,8 @@ void CompanionEngine::update()
 		return;
 	}
 
-	if (!state->didPlayerHadControlLastFrame && 
-		PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && 
+	if (!state->didPlayerHadControlLastFrame &&
+		PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) &&
 		distance(player, state->companionDog) >= DataFiles::DogMeta->getInt("auto_retrieve.min_distance") &&
 		!MISC::GET_MISSION_FLAG())
 	{
@@ -204,8 +212,48 @@ void CompanionEngine::update()
 	scanCompanionSurrounding();
 	updatePrompts();
 	updateGUI();
+	updateScriptEvents();
+
+	if (state->trackablePed && (ENTITY::IS_ENTITY_DEAD(state->trackablePed)) || distance(state->trackablePed, player) > 150)
+	{
+		state->trackablePed = NULL;
+	}
+
+	if (state->companionApi->getTrackedPed() && (!state->currentTask || !state->trackablePed))
+	{
+		state->companionApi->clearTrackedPed();
+	}
 
 	state->didPlayerHadControlLastFrame = PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID());
+}
+
+void CompanionEngine::updateScriptEvents()
+{
+	int events = SCRIPTS::GET_NUMBER_OF_EVENTS(1);
+	int eventData[100];
+
+	for (int i = 0; i < events; i++)
+	{
+		int eventType = SCRIPTS::GET_EVENT_AT_INDEX(1, i);
+		if (eventType == joaat("EVENT_NETWORK_SCRIPT_EVENT"))
+		{
+			SCRIPTS::GET_EVENT_DATA(1, i, (Any*)eventData, 50);
+			if (eventData[0] == joaat("DOG_COMPANION_SET_TRACKABLE_TARGET"))
+			{
+				log("received event: DOG_COMPANION_SET_TRACKABLE_TARGET");
+
+				Ped trackablePed = eventData[1];
+				if (ENTITY::IS_ENTITY_DEAD(trackablePed) || distance(trackablePed, player) > 150)
+				{
+					log("trackable target is either dead or too far, skipping");
+					continue;
+				}
+				
+				tutorial("trackable_target", 1);
+				state->trackablePed = trackablePed;
+			}
+		}
+	}
 }
 
 void CompanionEngine::scanCompanionSurrounding()
@@ -308,6 +356,11 @@ void CompanionEngine::updatePrompts()
 	if (state->praisePrompt->isActivatedByPlayer())
 	{
 		CompanionCommands::commandPraise(state);
+	}
+
+	if (state->trackPrompt->isActivatedByPlayer())
+	{
+		CompanionCommands::commandTrack(state, state->trackablePed);
 	}
 
 	if (distance(player, state->companionDog) < 2)
@@ -417,11 +470,21 @@ void CompanionEngine::updatePrompts()
 	state->stayPrompt->setIsEnabled(!isPlayerSpeaking && !state->companionApi->isAgitated());
 	state->dismissPrompt->setIsEnabled(!isPlayerSpeaking);
 	state->followPrompt->setIsEnabled(!isPlayerSpeaking);
+
+	if (state->trackablePed && !state->companionApi->isInCombat() && distance(state->trackablePed, player) > 20)
+	{
+		state->trackPrompt->show();
+		state->trackPrompt->setIsEnabled(!isPlayerSpeaking && state->trackablePed != state->companionApi->getTrackedPed());
+	}
+	else
+	{
+		state->trackPrompt->hide();
+	}
+
 	if (state->attackPrompt)
 	{
 		state->attackPrompt->setIsEnabled(!isPlayerSpeaking && !state->companionApi->isInCombat());
 	}
-
 }
 
 void CompanionEngine::updateGUI()
@@ -615,6 +678,10 @@ void CompanionEngine::accompanyDog(Ped dog)
 	state->renamePrompt = createRenamePrompt();
 	state->renamePrompt->setTargetEntity(state->companionDog);
 	state->renamePrompt->hide();
+
+	state->trackPrompt = createTrackPrompt();
+	state->trackPrompt->setTargetEntity(state->companionDog);
+	state->trackPrompt->hide();
 	
 	state->retrieveDogPrompt = createRetrieveDogPrompt(DataFiles::Dog->get("name"));
 	state->retrieveDogPrompt->hide();
@@ -802,9 +869,9 @@ void CompanionEngine::renameCompanion(const char* name)
 	}
 }
 
-void CompanionEngine::tutorial(const char* tutorialKey)
+void CompanionEngine::tutorial(const char* tutorialKey, bool forceShow)
 {
-	if (!DataFiles::TutorialFlags->getBool(tutorialKey))
+	if (forceShow || !DataFiles::TutorialFlags->getBool(tutorialKey) || rndInt(0, 5) > 3)
 	{
 		showHelpText(DataFiles::Lang->get(string("tutorial.").append(tutorialKey).c_str()), 8000);
 		log(string("tutorial seen: ").append(tutorialKey));

@@ -34,3 +34,5 @@ Vector3 operator* (Vector3 const& left, Vector3 const& right);
 bool operator! (Vector3 const& left);
 Vector3 calculatePointInDirection(Vector3 source, float heading, float distance);
 float calculateHeadingToVector(Vector3 source, Vector3 destination);
+
+Hash joaat(const char* string);

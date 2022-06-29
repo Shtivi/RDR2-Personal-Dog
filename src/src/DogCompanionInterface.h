@@ -7,6 +7,7 @@ class DogCompanionInterface
 protected:
 	Ped companion;
 	Stopwatch timer;
+	Ped trackedPed;
 
 public:
 	DogCompanionInterface(Ped companion);
@@ -37,4 +38,6 @@ public:
 	bool isBegging();
 	void hunt(Ped target, float timeout);
 	void flee(Ped threat, int duration = 20000, float distance = 50);
+	Ped getTrackedPed();
+	void clearTrackedPed();
 };

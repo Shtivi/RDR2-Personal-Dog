@@ -16,6 +16,7 @@ public:
 	Prompt* renamePrompt = NULL;
 	Prompt* attackPrompt = NULL;
 	Prompt* retrieveDogPrompt = NULL;
+	Prompt* trackPrompt = NULL;
 	ComapnionCoresUI* coresUI = NULL;
 	DogCompanionInterface* companionApi = NULL;
 	AsyncCompanionTask* currentTask;
@@ -26,4 +27,5 @@ public:
 	bool wasInsideInterior;
 	bool isWithinWhistlingRange;
 	bool didPlayerHadControlLastFrame;
+	Ped trackablePed = NULL;
 };

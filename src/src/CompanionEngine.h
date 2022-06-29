@@ -21,6 +21,7 @@ private:
 	void scanCompanionSurrounding();
 	void updateGUI();
 	void updateCompanionStats();
+	void updateScriptEvents();
 	void onAnimalInteraction(int eventIndex);
 	void onBulletImpact(int eventIndex);
 	void onPromptTriggered(int eventIndex);
@@ -32,5 +33,5 @@ private:
 	void dismissCompanion();
 	void clearCompanion();
 	void renameCompanion(const char* name);
-	void tutorial(const char* tutorialName);
+	void tutorial(const char* tutorialName, bool forceShow = false);
 };

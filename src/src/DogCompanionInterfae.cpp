@@ -17,6 +17,7 @@ vector<const char*> ComplimentsFemale = {
 DogCompanionInterface::DogCompanionInterface(Ped companion)
 {
 	this->companion = companion;
+	this->trackedPed = 0;
 }
 
 Ped DogCompanionInterface::getPed()
@@ -26,11 +27,13 @@ Ped DogCompanionInterface::getPed()
 
 void DogCompanionInterface::stay()
 {
+	clearTrackedPed();
 	TASK::TASK_START_SCENARIO_IN_PLACE_HASH(getPed(), MISC::GET_HASH_KEY("WORLD_ANIMAL_DOG_SITTING"), -1, 1, 1, 0, 1);
 }
 
 void DogCompanionInterface::follow()
 {
+	clearTrackedPed();
 	FLOCK::SET_ANIMAL_TUNING_FLOAT_PARAM(companion, 165, 5);
 	TASK::TASK_CLEAR_LOOK_AT(getPed());
 	if (!PED::IS_PED_GROUP_MEMBER(companion, PED::GET_PED_GROUP_INDEX(player), 0))
@@ -45,12 +48,13 @@ void DogCompanionInterface::follow()
 	{
 		TASK::CLEAR_PED_TASKS(companion, 1, 1);
 		//TASK::CLEAR_PED_TASKS_IMMEDIATELY(companion, 1, 1);
-		//TASK::TASK_FOLLOW_TO_OFFSET_OF_ENTITY(companion, player, 0, 0, 0, 3, 100000, 5, false, 0, 0, 0, 0);
+		//TASK::TASK_FOLLOW_TO_OFFSET_OF_ENTITY(companion, player, 0, 0, 0, 3, 100000, 5, false, 0, 0, 0, 0, 0);
 	}
 }
 
 void DogCompanionInterface::fetch(Entity entity, int timeout)
 {
+	clearTrackedPed();
 	TASK::TASK_LOOK_AT_ENTITY(getPed(), player, 12000, 0, 0, 0);
 	Vector3 entityCoords = entityPos(entity);
 	Object seq;
@@ -64,22 +68,26 @@ void DogCompanionInterface::fetch(Entity entity, int timeout)
 
 AsyncCompanionTask* DogCompanionInterface::warn(Entity entity, int timeout)
 {
+	clearTrackedPed();
 	return new WarnAsyncTask(getPed(), entity, timeout);
 }
 
 AsyncCompanionTask* DogCompanionInterface::warnSnake(Entity entity, int timeout)
 {
+	clearTrackedPed();
 	return new WarnAsyncTask(getPed(), entity, timeout, "WORLD_ANIMAL_DOG_BARKING_GROUND");
 }
 
 void DogCompanionInterface::dismiss()
 {
+	clearTrackedPed();
 	playVocalization("WHINE");
 	TASK::CLEAR_PED_TASKS(getPed(), 1, 1);
 }
 
 void DogCompanionInterface::getPraised(Entity ped)
 {
+	clearTrackedPed();
 	const char* speech = ComplimentsMale.at(rndInt(0, ComplimentsMale.size()));
 	if (!PED::IS_PED_MALE(getPed()))
 	{
@@ -106,17 +114,20 @@ void DogCompanionInterface::getPraised(Entity ped)
 
 void DogCompanionInterface::combat(Ped target)
 {
+	clearTrackedPed();
 	TASK::TASK_COMBAT_PED(companion, target, 0, 16);
 }
 
 void DogCompanionInterface::eat()
 {
+	clearTrackedPed();
 	int unk = TASK::_0x244430C13BA5258E(companion, 0, 1, 0);
 	TASK::TASK_EAT(companion, unk, 0);
 }
 
 void DogCompanionInterface::beg(int duration, Entity lookAt)
 {
+	clearTrackedPed();
 	if (lookAt && ENTITY::DOES_ENTITY_EXIST(lookAt))
 	{
 		TASK::TASK_LOOK_AT_ENTITY(getPed(), lookAt, duration, 0, 0, 0);
@@ -131,6 +142,7 @@ void DogCompanionInterface::beg(int duration, Entity lookAt)
 
 WaitOutsideInteriorAsyncTask* DogCompanionInterface::waitOutsideInterior()
 {
+	clearTrackedPed();
 	return new WaitOutsideInteriorAsyncTask(getPed(), player);
 }
 
@@ -250,11 +262,12 @@ bool DogCompanionInterface::isBegging()
 
 AsyncCompanionTask* DogCompanionInterface::track(Ped ped)
 {
-	if (ped == getPed())
+	if (ped == getPed() || ped == trackedPed)
 	{
 		return NULL;
 	}
 
+	trackedPed = ped;
 	return new TrackEntityAsyncTask(getPed(), ped, 50);
 }
 
@@ -269,9 +282,21 @@ void DogCompanionInterface::hunt(Ped target, float timeout)
 	TASK::TASK_COMBAT_PED(0, target, 0, 16);
 	TASK::CLOSE_SEQUENCE_TASK(seq);
 	TASK::TASK_PERFORM_SEQUENCE(getPed(), seq);
+	trackedPed = target;
 }
 
 void DogCompanionInterface::flee(Ped threat, int duration, float distance)
 {
+	clearTrackedPed();
 	TASK::TASK_FLEE_PED(getPed(), threat, 3, 0, distance, duration, 0);
+}
+
+Ped DogCompanionInterface::getTrackedPed()
+{
+	return trackedPed;
+}
+
+void DogCompanionInterface::clearTrackedPed()
+{
+	this->trackedPed = 0;
 }
