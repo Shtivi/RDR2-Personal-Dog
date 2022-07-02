@@ -61,6 +61,14 @@ Prompt* createTrackPrompt()
 		PromptMode::SemiHold);
 }
 
+Prompt* createRevivePrompt()
+{
+	return new Prompt(
+		DataFiles::Lang->get("interaction.revive.promptLabel"),
+		MISC::GET_HASH_KEY("INPUT_CONTEXT_X"),
+		PromptMode::SemiHold);
+}
+
 CompanionEngine::CompanionEngine()
 {
 	this->state = new RootState();
@@ -131,6 +139,10 @@ void CompanionEngine::update()
 		{
 			onWhistle(i);
 		}
+		else if (eventType == MISC::GET_HASH_KEY("EVENT_TRIGGERED_ANIMAL_WRITHE"))
+		{
+			onAnimalBleedout(i);
+		}
 	}
 
 	if (state->candidateDog && state->accompanyPrompt && state->accompanyPrompt->isActivatedByPlayer())
@@ -145,7 +157,7 @@ void CompanionEngine::update()
 			tutorial("bond_1");
 		}
 
-return;
+		return;
 	}
 
 	if (!ENTITY::DOES_ENTITY_EXIST(state->companionDog))
@@ -187,7 +199,8 @@ return;
 	float companionCurrentHealthRate = state->companionApi->getHealthRate();
 	if (companionPreviousHealthRate > companionCurrentHealthRate &&
 		companionPreviousHealthRate > DataFiles::DogMeta->getFloat("low_health_threshold") &&
-		companionCurrentHealthRate < DataFiles::DogMeta->getFloat("low_health_threshold"))
+		companionCurrentHealthRate < DataFiles::DogMeta->getFloat("low_health_threshold") && 
+		!TASK::IS_PED_IN_WRITHE(state->companionDog))
 	{
 		showHelpText(DataFiles::Lang->get("tutorial.companion_low_health"));
 	}
@@ -298,7 +311,7 @@ void CompanionEngine::scanCompanionSurrounding()
 
 void CompanionEngine::updateCompanionStats()
 {
-	if (!state->isWithinWhistlingRange)
+	if (!state->isWithinWhistlingRange || TASK::IS_PED_IN_WRITHE(state->companionDog))
 	{
 		return;
 	}
@@ -332,7 +345,6 @@ void CompanionEngine::updateCompanionStats()
 		if (nextHealthCoreValue < DataFiles::DogMeta->getFloat("low_health_threshold") * 100 && 
 			currentHealthCoreValue >= DataFiles::DogMeta->getFloat("low_health_threshold") * 100)
 		{
-			debug("low!!!!!!!!");
 			showHelpText(DataFiles::Lang->get("tutorial.companion_low_health_core"), 10000);
 		}
 	}
@@ -343,6 +355,37 @@ void CompanionEngine::updateCompanionStats()
 
 void CompanionEngine::updatePrompts()
 {
+	if (TASK::IS_PED_IN_WRITHE(state->companionDog))
+	{
+		state->feedPrompt->hide();
+		state->praisePrompt->hide();
+		state->followPrompt->hide();
+		state->stayPrompt->hide();
+		state->renamePrompt->hide();
+		state->dismissPrompt->hide();
+		state->trackPrompt->hide();
+
+		if (state->attackPrompt)
+		{
+			state->attackPrompt->hide();
+		}
+
+		state->revivePrompt->show();
+		state->revivePrompt->setIsEnabled(distance(player, state->companionDog) < 2);
+		if (state->revivePrompt->isActivatedByPlayer())
+		{
+			PED::_INCAPACITATED_REVIVE(state->companionDog, state->companionDog);
+			CompanionCommands::commandPraise(state);
+
+		}
+
+		return;
+	}
+	else
+	{
+		state->revivePrompt->hide();
+	}
+
 	if (state->stayPrompt->isActivatedByPlayer())
 	{
 		CompanionCommands::commandStay(state);
@@ -363,25 +406,40 @@ void CompanionEngine::updatePrompts()
 		CompanionCommands::commandTrack(state, state->trackablePed);
 	}
 
-	if (distance(player, state->companionDog) < 2)
+	if (distance(player, state->companionDog) < 3)
 	{
-		if (PED::IS_PED_CARRYING_SOMETHING(player) &&
-			state->companionApi->isEntityEatable(findCarriedPedBy(player)))
+		pair<int, int> feedingItem = getAvailableFeedingItem();
+		if (feedingItem.first || (
+				PED::IS_PED_CARRYING_SOMETHING(player) &&
+				state->companionApi->isEntityEatable(findCarriedPedBy(player)))
+			)
 		{
-			if (!state->companionApi->isBegging())
+			if (!state->companionApi->isBegging() && PED::IS_PED_CARRYING_SOMETHING(player))
 			{
 				state->companionApi->beg(12000, findCarriedPedBy(player));
+				tutorial("companion_meal");
 			}
+
 			state->feedPrompt->show();
 			state->praisePrompt->hide();
 			if (state->feedPrompt->isActivatedByPlayer())
 			{
-				state->companionApi->getPreyMeal(player);
+				if (PED::IS_PED_CARRYING_SOMETHING(player))
+				{
+					state->companionApi->getPreyMeal(player);
+					log("dog has been fed with hunted prey");
+				}
+				else
+				{
+					state->feedPrompt->setIsEnabled(false);
+					state->companionApi->feedFromInventory(feedingItem.first, feedingItem.second);
+					state->feedPrompt->setIsEnabled(true);
+					log(string("dog has been fed with inventory item: ").append(to_string(feedingItem.second)).c_str());
+				}
+
 				DataFiles::Dog->set("health_core", 100);
 				DataFiles::Dog->save();
 			}
-
-			tutorial("companion_meal");
 		}
 		else
 		{
@@ -405,6 +463,7 @@ void CompanionEngine::updatePrompts()
 	{
 		state->dismissPrompt->hide();
 		state->feedPrompt->hide();
+		state->praisePrompt->show();
 		state->renamePrompt->hide();
 	}
 
@@ -505,6 +564,7 @@ void CompanionEngine::updateGUI()
 
 
 	if (getPlayerTargetEntity() == state->companionDog || 
+		PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(PLAYER::PLAYER_ID(), state->companionDog) ||
 		state->companionApi->isAgitated() || 
 		//DECORATOR::DECOR_GET_INT(state->companionDog, "SH_CMP_health_core") < DataFiles::DogMeta->getFloat("low_health_threshold") ||
 		state->companionApi->getHealthRate() < DataFiles::DogMeta->getFloat("low_health_threshold"))
@@ -682,6 +742,10 @@ void CompanionEngine::accompanyDog(Ped dog)
 	state->trackPrompt = createTrackPrompt();
 	state->trackPrompt->setTargetEntity(state->companionDog);
 	state->trackPrompt->hide();
+
+	state->revivePrompt = createRevivePrompt();
+	state->revivePrompt->setTargetEntity(state->companionDog);
+	state->revivePrompt->hide();
 	
 	state->retrieveDogPrompt = createRetrieveDogPrompt(DataFiles::Dog->get("name"));
 	state->retrieveDogPrompt->hide();
@@ -761,6 +825,26 @@ void CompanionEngine::onWhistle(int eventIndex)
 	else
 	{
 		showHelpText(DataFiles::Lang->get("tutorial.companion_out_of_whistling_range"));
+	}
+}
+
+void CompanionEngine::onAnimalBleedout(int eventIndex)
+{
+	if (!state->companionDog)
+	{
+		return;
+	}
+
+	int arr[10];
+	if (!SCRIPTS::GET_EVENT_DATA(0, eventIndex, (Any*)arr, 2))
+	{
+		return;
+	}
+
+	if (arr[0] == state->companionDog) 
+	{
+		tutorial("dog_bleedout", true);
+		state->companionApi->clearTrackedPed();
 	}
 }
 
@@ -878,4 +962,40 @@ void CompanionEngine::tutorial(const char* tutorialKey, bool forceShow)
 		DataFiles::TutorialFlags->set(tutorialKey, 1);
 		DataFiles::TutorialFlags->save();
 	}
+}
+
+vector<pair<string, string>> feedingItems = {
+	{"provision_gamey_bird_meat", "provision_meat_gamey_bird"},
+	{"PROVISION_PLUMP_BIRD_MEAT", "provision_meat_plump_bird"},
+	{"PROVISION_TENDER_PORK", "provision_meat_tender_pork"},
+	{"PROVISION_GAME_MEAT","provision_meat_game" },
+	{"PROVISION_GRISTLY_MUTTON" ,"provision_meat_gristly_mutton"},
+	{"PROVISION_MATURE_VENISON","provision_meat_mature_venison"},
+	{"PROVISION_PRIME_BEEF","provision_meat_prime_beef" },
+	{"PROVISION_BIG_GAME_MEAT","provision_meat_big_game" },
+	{"CONSUMABLE_GAMEY_BIRD_COOKED", "consumable_meat_gamey_bird_cooked"},
+	{"CONSUMABLE_PLUMP_BIRD_COOKED", "consumable_meat_plump_bird_cooked"},
+	{"CONSUMABLE_TENDER_PORK_COOKED", "consumable_meat_tender_pork_cooked"},
+	{"CONSUMABLE_GAME_MEAT_COOKED","consumable_meat_game_cooked" },
+	{"CONSUMABLE_GRISTLY_MUTTON_COOKED" ,"consumable_meat_gristly_mutton_cooked"},
+	{"CONSUMABLE_MATURE_VENISON_COOKED","consumable_meat_mature_venison_cooked"},
+	{"CONSUMABLE_PRIME_BEEF_COOKED","consumable_meat_prime_beef_cooked" },
+	{"CONSUMABLE_BIG_GAME_MEAT_COOKED","consumable_meat_big_game_cooked" },
+};
+
+pair<int, int> CompanionEngine::getAvailableFeedingItem()
+{
+	int inventoryId = INVENTORY::_INVENTORY_GET_INVENTORY_ID_FROM_PED(player);
+
+	for (auto itr = feedingItems.begin(); itr != feedingItems.end(); itr++)
+	{
+		auto inventoryItemName = itr->first.c_str();
+		auto itemTextureName = itr->second.c_str();
+		if (INVENTORY::_0xE787F05DFC977BDE(inventoryId, joaat(inventoryItemName), 0)) 
+		{
+			return make_pair(joaat(inventoryItemName), joaat(itemTextureName));
+		}
+	}
+
+	return make_pair(0, 0);;
 }

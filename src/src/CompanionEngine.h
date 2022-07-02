@@ -26,6 +26,7 @@ private:
 	void onBulletImpact(int eventIndex);
 	void onPromptTriggered(int eventIndex);
 	void onWhistle(int eventIndex);
+	void onAnimalBleedout(int eventIndex);
 	void onCompnaionDied();
 	void onPredatorDetected(Ped predator);
 	void bondWithDog();
@@ -34,4 +35,5 @@ private:
 	void clearCompanion();
 	void renameCompanion(const char* name);
 	void tutorial(const char* tutorialName, bool forceShow = false);
+	pair<int, int> getAvailableFeedingItem();
 };

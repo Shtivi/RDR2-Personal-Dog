@@ -101,6 +101,7 @@ void playAnimation(Ped ped, const char* animName, const char* animDict, int dura
 bool isPedADog(Ped ped);
 bool isPedASnake(Ped ped);
 int getPedSize(Ped ped);
+void removeItemFromPedInventory(Ped ped, int inventoryItemHash, int count = 1, const char* textureDictName = "inventory_items", int textureHash = 0, bool withNotification = true);
 
 #include "PedBehavior.h"
 #include "Conversation.h"

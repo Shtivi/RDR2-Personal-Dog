@@ -393,3 +393,45 @@ int getPedSize(Ped ped)
 {
 	debug(invoke<int>(0xA65AA1ACE81E5A77, ENTITY::GET_ENTITY_MODEL(ped)));
 }
+
+struct
+{
+	alignas(8) int f_0;
+	alignas(8) const  char* f_1;
+	alignas(8) const char* f_2;
+	alignas(8) int f_3;
+} sta0;
+
+struct {
+	alignas(8) int f_0;
+	alignas(8) const char* f_1;
+	alignas(8) const  char* f_2;
+	alignas(8) int f_3;
+	alignas(8) int f_4;
+	alignas(8) int f_5;
+	alignas(8) int f_6;
+} sta1;
+
+void removeItemFromPedInventory(Ped ped, int inventoryItemHash, int count, const char* textureDictName, int textureHash, bool withNotification)
+{
+	INVENTORY::_0xB4158C8C9A3B5DCE(INVENTORY::_INVENTORY_GET_INVENTORY_ID_FROM_PED(ped), inventoryItemHash, count, joaat("REMOVE_REASON_DEFAULT"));
+
+	if (ped == player && withNotification)
+	{
+		sta0.f_0 = -2;
+		sta0.f_1 = "Transaction_Feed_Sounds";
+		sta0.f_2 = "Transaction_Negative";
+		sta0.f_3 = 0;
+		sta0.f_0 = 450;
+
+		sta1.f_0 = 0;
+		sta1.f_1 = MISC::VAR_STRING(0, inventoryItemHash);
+		sta1.f_2 = textureDictName;
+		sta1.f_3 = textureHash ? textureHash : inventoryItemHash;
+		sta1.f_4 = 1;
+		sta1.f_5 = joaat("COLOR_GREYMID");;
+		sta1.f_6 = 0;
+		UIFEED::_0xB249EBCB30DD88E0((Any)&sta0, (Any)&sta1, 1);
+	}
+
+}

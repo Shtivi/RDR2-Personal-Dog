@@ -17,6 +17,7 @@ public:
 	Prompt* attackPrompt = NULL;
 	Prompt* retrieveDogPrompt = NULL;
 	Prompt* trackPrompt = NULL;
+	Prompt* revivePrompt;
 	ComapnionCoresUI* coresUI = NULL;
 	DogCompanionInterface* companionApi = NULL;
 	AsyncCompanionTask* currentTask;

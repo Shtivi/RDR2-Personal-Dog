@@ -239,7 +239,8 @@ void DogCompanionInterface::setName(const char* name)
 
 bool DogCompanionInterface::isAgitated()
 {
-	return 
+	return
+		TASK::IS_PED_IN_WRITHE(getPed()) ||
 		PED::IS_PED_IN_MELEE_COMBAT(getPed()) || 
 		PED::IS_PED_USING_SCENARIO_HASH(getPed(), MISC::GET_HASH_KEY("WORLD_ANIMAL_DOG_BARK_GROWL")) ||
 		PED::IS_PED_USING_SCENARIO_HASH(getPed(), MISC::GET_HASH_KEY("WORLD_ANIMAL_DOG_BARKING_GROUND"));
@@ -269,6 +270,17 @@ AsyncCompanionTask* DogCompanionInterface::track(Ped ped)
 
 	trackedPed = ped;
 	return new TrackEntityAsyncTask(getPed(), ped, 50);
+}
+
+void DogCompanionInterface::feedFromInventory(int itemHash, int satchelTextureHash)
+{
+	TASK::TASK_ANIMAL_INTERACTION(player, getPed(), joaat("Interaction_Dog_Patting"), 0, 1);
+	WAIT(3000);
+
+	if (PED::_0x7FC84E85D98F063D(player))
+	{
+		removeItemFromPedInventory(player, itemHash, 1, "satchel_textures", satchelTextureHash);
+	}
 }
 
 void DogCompanionInterface::hunt(Ped target, float timeout)

@@ -24,6 +24,7 @@ public:
 	void eat();
 	void beg(int duration = -1, Entity lookAt = NULL);
 	AsyncCompanionTask* track(Ped ped);
+	void feedFromInventory(int itemHash, int satchelTextureHash);
 	void getPreyMeal(Ped from);
 	bool isEntityEatable(Entity entity);
 	void playVocalization(const char* vocalization = "BARK");
