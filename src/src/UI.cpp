@@ -25,7 +25,7 @@ void showAdvancedNotification(const char* title, const char* subtitle, Hash icon
 	args2->subtitle = MISC::VAR_STRING(10, "LITERAL_STRING", subtitle);
 	args2->iconDict = iconsDict;
 	args2->icon = icon;
-	UIFEED::_SHOW_ADVANCED_NOTIFICATION((Any*)args1, (Any*)args2, 1, 1);
+	UIFEED::_UI_FEED_POST_SAMPLE_TOAST((Any*)args1, (Any*)args2, true, true);
 }
 
 void showRightText(const char* text, int duration)

@@ -34,7 +34,7 @@ void printHelpText()
         helpTextArgs2.unk = 0;
         helpTextArgs2.text = MISC::VAR_STRING(10, "LITERAL_STRING", helpText);
 
-        UIFEED::_SHOW_TOOLTIP((Any*)&helpTextArgs1, (Any*)&helpTextArgs2, 1);
+        UIFEED::_UI_FEED_POST_HELP_TEXT((Any*)&helpTextArgs1, (Any*)&helpTextArgs2, 1);
         clearHelpText();
     }
 }

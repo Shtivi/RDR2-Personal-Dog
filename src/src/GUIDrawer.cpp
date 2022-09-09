@@ -2,14 +2,14 @@
 
 void drawText(char* text, float x, float y, int r, int g, int b, int a, bool centered, float sx, float sy, const char* font)
 {
-	HUD::_SET_TEXT_COLOR(r, g, b, a);
-	HUD::SET_TEXT_SCALE(sx, sy);
+	UIDEBUG::_BG_SET_TEXT_COLOR(r, g, b, a);
+	UIDEBUG::_BG_SET_TEXT_SCALE(sx, sy);
 	HUD::SET_TEXT_CENTRE(centered);
 
 	stringstream tmplate;
 	tmplate << "<FONT FACE='" << font <<"' COLOR='#ffffff'>" << text << "</FONT>";
 	const char* InsertTemplate = MISC::VAR_STRING(10, "LITERAL_STRING", _strdup(tmplate.str().c_str()));
-	HUD::_DISPLAY_TEXT(MISC::VAR_STRING(42, "COLOR_STRING", 0, InsertTemplate), x, y);
+	UIDEBUG::_BG_DISPLAY_TEXT(MISC::VAR_STRING(42, "COLOR_STRING", 0, InsertTemplate), x, y);
 }
 
 void drawSprite(char* category, char* sprite, float x, float y, float scalex, float scaley, float rotation, int r, int g, int b, int a)

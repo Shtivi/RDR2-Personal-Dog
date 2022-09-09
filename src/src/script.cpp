@@ -137,7 +137,7 @@ void main()
 			}
 
 
-			LAW::_CLEAR_CURRENT_PURSUIT();
+			LAW::_SET_BOUNTY_HUNTER_PURSUIT_CLEARED();
 			
 			if (IsKeyJustUp(VK_KEY_X))
 			{
@@ -156,7 +156,7 @@ void main()
 				//invoke<Void>(0xC0F0417A90402742, veh, MISC::GET_HASH_KEY("pg_re_coachrobbery01x"));
 				//VEHICLE::_0xF489F94BFEE12BB0(veh, -1027511593); // Adds $100 loot
 				//VEHICLE::_0xF489F94BFEE12BB0(veh, -1732002606); // Adds valuable loots (naval compass, coin stacks, earing, ring)
-				VEHICLE::_0xF489F94BFEE12BB0(veh, 1767696941); // Adds valuable loots (naval compass, coin stacks, earing, ring)
+				VEHICLE::_SET_FORCE_COACH_ROBBERY_LOOT(veh, 1767696941); // Adds valuable loots (naval compass, coin stacks, earing, ring)
 
 				//setVehicleCargo(veh, (VehicleCargoHash));
 				//PROPSET::_ADD_LIGHT_PROP_SET_TO_VEHICLE(veh, );
@@ -196,7 +196,7 @@ void ScriptMain()
 }
 
 void debug(const char* text) {
-	HUD::_DISPLAY_TEXT(MISC::VAR_STRING(10, "LITERAL_STRING", text), 0, 0);
+	UIDEBUG::_BG_DISPLAY_TEXT(MISC::VAR_STRING(10, "LITERAL_STRING", text), 0, 0);
 }
 
 void debug(string text) {
