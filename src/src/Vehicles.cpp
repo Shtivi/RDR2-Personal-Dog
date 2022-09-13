@@ -137,7 +137,7 @@ Vector3 getClosestRoad(Vector3 source, float radius)
 
 void setVehicleCargo(Vehicle vehicle, VehicleCargoHash cargoHash)
 {
-	PROPSET::_0xD80FAF919A2E56EA(vehicle, cargoHash);
+	PROPSET::_ADD_PROP_SET_FOR_VEHICLE(vehicle, cargoHash);
 }
 
 Ped getPedVehicleOccupant(Ped ped, int seat)

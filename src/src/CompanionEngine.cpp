@@ -113,7 +113,7 @@ void CompanionEngine::start()
 Ped CompanionEngine::spawnDog()
 {
 	Ped dog = createPed(DataFiles::Dog->getInt("model"), *getSafeCoordForPed(playerPos() + getForwardVector(player)));
-	PED::_SET_PED_OUTFIT_PRESET(dog, DataFiles::Dog->getInt("preset_index"), 0); // _SET_PED_OUTFIT_PRESET
+	PED::_EQUIP_META_PED_OUTFIT_PRESET(dog, DataFiles::Dog->getInt("preset_index"), 0); // _SET_PED_OUTFIT_PRESET
 	return dog;
 }
 
@@ -276,7 +276,7 @@ void CompanionEngine::scanCompanionSurrounding()
 		Ped playerTarget = PED::GET_CURRENT_TARGET_FOR_PED(player);
 		if (playerTarget && 
 			!PED::IS_PED_HOGTIED(playerTarget) &&
-			!PED::_IS_PED_BEING_HOGTIED(playerTarget))
+			!PED::IS_PED_BEING_HOGTIED(playerTarget))
 		{
 			state->companionApi->combat(playerTarget);
 		}
@@ -991,7 +991,7 @@ pair<int, int> CompanionEngine::getAvailableFeedingItem()
 	{
 		auto inventoryItemName = itr->first.c_str();
 		auto itemTextureName = itr->second.c_str();
-		if (INVENTORY::_0xE787F05DFC977BDE(inventoryId, joaat(inventoryItemName), 0)) 
+		if (INVENTORY::_INVENTORY_GET_INVENTORY_ITEM_COUNT_WITH_ITEMID(inventoryId, joaat(inventoryItemName), 0))
 		{
 			return make_pair(joaat(inventoryItemName), joaat(itemTextureName));
 		}

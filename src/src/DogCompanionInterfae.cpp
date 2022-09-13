@@ -277,7 +277,7 @@ void DogCompanionInterface::feedFromInventory(int itemHash, int satchelTextureHa
 	TASK::TASK_ANIMAL_INTERACTION(player, getPed(), joaat("Interaction_Dog_Patting"), 0, 1);
 	WAIT(3000);
 
-	if (PED::_0x7FC84E85D98F063D(player))
+	if (PED::_IS_ANIMAL_INTERACTION_RUNNING(player))
 	{
 		removeItemFromPedInventory(player, itemHash, 1, "satchel_textures", satchelTextureHash);
 	}

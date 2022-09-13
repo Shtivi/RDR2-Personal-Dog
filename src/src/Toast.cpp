@@ -65,7 +65,7 @@ void showToast()
 		toastArgs2.title = MISC::VAR_STRING(10, "LITERAL_STRING", toastTitle);
 		toastArgs2.subtitle = MISC::VAR_STRING(10, "LITERAL_STRING", toastSubtitle);
 
-		UIFEED::_SHOW_ADVANCED_NOTIFICATION((Any*)&toastArgs1, (Any*)&toastArgs2, 1, 1);
+		UIFEED::_UI_FEED_POST_SAMPLE_TOAST((Any*)&toastArgs1, (Any*)&toastArgs2, true, true);
 		clearToast();
 	}
 }

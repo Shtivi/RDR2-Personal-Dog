@@ -414,7 +414,7 @@ struct {
 
 void removeItemFromPedInventory(Ped ped, int inventoryItemHash, int count, const char* textureDictName, int textureHash, bool withNotification)
 {
-	INVENTORY::_0xB4158C8C9A3B5DCE(INVENTORY::_INVENTORY_GET_INVENTORY_ID_FROM_PED(ped), inventoryItemHash, count, joaat("REMOVE_REASON_DEFAULT"));
+	INVENTORY::_INVENTORY_REMOVE_INVENTORY_ITEM_WITH_ITEMID(INVENTORY::_INVENTORY_GET_INVENTORY_ID_FROM_PED(ped), inventoryItemHash, count, joaat("REMOVE_REASON_DEFAULT"));
 
 	if (ped == player && withNotification)
 	{
@@ -431,7 +431,7 @@ void removeItemFromPedInventory(Ped ped, int inventoryItemHash, int count, const
 		sta1.f_4 = 1;
 		sta1.f_5 = joaat("COLOR_GREYMID");;
 		sta1.f_6 = 0;
-		UIFEED::_0xB249EBCB30DD88E0((Any)&sta0, (Any)&sta1, 1);
+		UIFEED::_UI_FEED_POST_SAMPLE_TOAST_RIGHT((Any*)&sta0, (Any*)&sta1, true);
 	}
 
 }

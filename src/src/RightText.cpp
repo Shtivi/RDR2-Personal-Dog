@@ -50,7 +50,7 @@ void printRightText()
         rightTextArgs2.unk = 0;
         rightTextArgs2.text = MISC::VAR_STRING(10, "LITERAL_STRING", rightText);
 
-        UIFEED::_SHOW_SIMPLE_RIGHT_TEXT((Any*)&rightTextArgs1, (Any*)&rightTextArgs2, 1);
+        UIFEED::_UI_FEED_POST_FEED_TICKER((Any*)&rightTextArgs1, (Any*)&rightTextArgs2, 1);
         clearRightText();
     }
 }
